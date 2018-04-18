@@ -1,0 +1,2471 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="client-nojs">
+<head>
+    <meta charset="UTF-8"/>
+    <title>HTML5 Security Cheat Sheet - OWASP</title>
+    <script>document.documentElement.className = document.documentElement.className.replace(/(^|\s)client-nojs(\s|$)/, "$1client-js$2");</script>
+    <script>(window.RLQ = window.RLQ || []).push(function () {
+        mw.config.set({
+            "wgCanonicalNamespace": "",
+            "wgCanonicalSpecialPageName": false,
+            "wgNamespaceNumber": 0,
+            "wgPageName": "HTML5_Security_Cheat_Sheet",
+            "wgTitle": "HTML5 Security Cheat Sheet",
+            "wgCurRevisionId": 238076,
+            "wgRevisionId": 238076,
+            "wgArticleId": 20378,
+            "wgIsArticle": true,
+            "wgIsRedirect": false,
+            "wgAction": "view",
+            "wgUserName": null,
+            "wgUserGroups": ["*"],
+            "wgCategories": ["Cheatsheets"],
+            "wgBreakFrames": true,
+            "wgPageContentLanguage": "en",
+            "wgPageContentModel": "wikitext",
+            "wgSeparatorTransformTable": ["", ""],
+            "wgDigitTransformTable": ["", ""],
+            "wgDefaultDateFormat": "dmy",
+            "wgMonthNames": ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            "wgMonthNamesShort": ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            "wgRelevantPageName": "HTML5_Security_Cheat_Sheet",
+            "wgRelevantArticleId": 20378,
+            "wgRequestId": "3fce701be0383ca814a2e509",
+            "wgIsProbablyEditable": false,
+            "wgRestrictionEdit": [],
+            "wgRestrictionMove": [],
+            "wgWikiEditorEnabledModules": {"toolbar": true, "dialogs": true, "preview": true, "publish": true},
+            "wgHeaderTabsTabIndexes": [],
+            "wgVisualEditor": {
+                "pageLanguageCode": "en",
+                "pageLanguageDir": "ltr",
+                "usePageImages": false,
+                "usePageDescriptions": false
+            },
+            "wgCategoryTreePageCategoryOptions": "{\"mode\":0,\"hideprefix\":20,\"showcount\":true,\"namespaces\":false}",
+            "wgVisualEditorToolbarScrollOffset": 0
+        });
+        mw.loader.implement("user.options", function ($, jQuery, require, module) {
+            mw.user.options.set({"variant": "en"});
+        });
+        mw.loader.implement("user.tokens", function ($, jQuery, require, module) {
+            mw.user.tokens.set({"editToken": "+\\", "patrolToken": "+\\", "watchToken": "+\\", "csrfToken": "+\\"});
+            /*@nomin*/
+            ;
+
+        });
+        mw.loader.load(["mediawiki.page.startup", "ext.visualEditor.desktopArticleTarget.init", "skins.vector.js"]);
+    });</script>
+    <link rel="stylesheet"
+          href="/load.php?debug=false&amp;lang=en&amp;modules=ext.pygments%7Cext.visualEditor.desktopArticleTarget.noscript%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Cskins.vector.styles&amp;only=styles&amp;skin=vector"/>
+    <link rel="stylesheet" href="/extensions/HeaderTabs/skins/ext.headertabs.large.css"/>
+    <meta name="ResourceLoaderDynamicStyles" content=""/>
+    <link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=vector"/>
+    <script async=""
+            src="/load.php?debug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=vector"></script>
+    <meta name="generator" content="MediaWiki 1.27.2"/>
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="OWASP (en)"/>
+    <link rel="EditURI" type="application/rsd+xml" href="https://www.owasp.org/api.php?action=rsd"/>
+    <link rel="copyright" href="https://creativecommons.org/licenses/by-sa/4.0/"/>
+    <link rel="alternate" type="application/atom+xml" title="OWASP Atom feed"
+          href="/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+</head>
+<body class="mediawiki ltr sitedir-ltr ns-0 ns-subject page-HTML5_Security_Cheat_Sheet rootpage-HTML5_Security_Cheat_Sheet skin-vector action-view">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+    <a id="top"></a>
+
+    <div class="mw-indicators">
+    </div>
+    <h1 id="firstHeading" class="firstHeading" lang="en">HTML5 Security Cheat Sheet</h1>
+    <div id="bodyContent" class="mw-body-content">
+        <div id="siteSub">From OWASP</div>
+        <div id="contentSub"></div>
+        <div id="jump-to-nav" class="mw-jump">
+            Jump to: <a href="#mw-head">navigation</a>, <a href="#p-search">search</a>
+        </div>
+        <div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr">
+            <div style="width:100%;height:160px;border:0,margin:0;overflow: hidden;"><img alt="Cheatsheets-header.jpg"
+                                                                                          src="/images/d/d8/Cheatsheets-header.jpg"
+                                                                                          width="2400" height="160"/>
+            </div>
+            <table style="padding: 0;margin:0;margin-top:10px;text-align:left;">
+                <tr>
+                    <td valign="top" style="border-right: 1px dotted gray;padding-right:25px;">
+                        <p>Last revision (mm/dd/yy): <b>02/25/2018</b>
+                        </p>
+                        <h1><span class="mw-headline" id="Introduction">Introduction</span></h1>
+                        <div id="toc" class="toc">
+                            <div id="toctitle"><h2></h2></div>
+                            <ul>
+                                <li class="toclevel-1 tocsection-1"><a href="#Introduction"><span
+                                        class="tocnumber">1</span> <span class="toctext">Introduction</span></a></li>
+                                <li class="toclevel-1 tocsection-2"><a href="#Communication_APIs"><span
+                                        class="tocnumber">2</span> <span class="toctext">Communication APIs</span></a>
+                                    <ul>
+                                        <li class="toclevel-2 tocsection-3"><a href="#Web_Messaging"><span
+                                                class="tocnumber">2.1</span> <span class="toctext">Web Messaging</span></a>
+                                        </li>
+                                        <li class="toclevel-2 tocsection-4"><a
+                                                href="#Cross_Origin_Resource_Sharing"><span class="tocnumber">2.2</span>
+                                            <span class="toctext">Cross Origin Resource Sharing</span></a></li>
+                                        <li class="toclevel-2 tocsection-5"><a href="#WebSockets"><span
+                                                class="tocnumber">2.3</span> <span class="toctext">WebSockets</span></a>
+                                        </li>
+                                        <li class="toclevel-2 tocsection-6"><a href="#Server-Sent_Events"><span
+                                                class="tocnumber">2.4</span> <span
+                                                class="toctext">Server-Sent Events</span></a></li>
+                                    </ul>
+                                </li>
+                                <li class="toclevel-1 tocsection-7"><a href="#Storage_APIs"><span
+                                        class="tocnumber">3</span> <span class="toctext">Storage APIs</span></a>
+                                    <ul>
+                                        <li class="toclevel-2 tocsection-8"><a href="#Local_Storage"><span
+                                                class="tocnumber">3.1</span> <span class="toctext">Local Storage</span></a>
+                                        </li>
+                                        <li class="toclevel-2 tocsection-9"><a href="#Client-side_databases"><span
+                                                class="tocnumber">3.2</span> <span
+                                                class="toctext">Client-side databases</span></a></li>
+                                    </ul>
+                                </li>
+                                <li class="toclevel-1 tocsection-10"><a href="#Geolocation"><span
+                                        class="tocnumber">4</span> <span class="toctext">Geolocation</span></a></li>
+                                <li class="toclevel-1 tocsection-11"><a href="#Web_Workers"><span
+                                        class="tocnumber">5</span> <span class="toctext">Web Workers</span></a></li>
+                                <li class="toclevel-1 tocsection-12"><a href="#Tabnabbing"><span
+                                        class="tocnumber">6</span> <span class="toctext">Tabnabbing</span></a></li>
+                                <li class="toclevel-1 tocsection-13"><a href="#Sandboxed_frames"><span
+                                        class="tocnumber">7</span> <span class="toctext">Sandboxed frames</span></a>
+                                </li>
+                                <li class="toclevel-1 tocsection-14"><a href="#Offline_Applications"><span
+                                        class="tocnumber">8</span> <span class="toctext">Offline Applications</span></a>
+                                </li>
+                                <li class="toclevel-1 tocsection-15"><a
+                                        href="#Progressive_Enhancements_and_Graceful_Degradation_Risks"><span
+                                        class="tocnumber">9</span> <span class="toctext">Progressive Enhancements and Graceful Degradation Risks</span></a>
+                                </li>
+                                <li class="toclevel-1 tocsection-16"><a href="#HTTP_Headers_to_enhance_security"><span
+                                        class="tocnumber">10</span> <span class="toctext">HTTP Headers to enhance security</span></a>
+                                    <ul>
+                                        <li class="toclevel-2 tocsection-17"><a href="#X-Frame-Options"><span
+                                                class="tocnumber">10.1</span> <span
+                                                class="toctext">X-Frame-Options</span></a></li>
+                                        <li class="toclevel-2 tocsection-18"><a href="#X-XSS-Protection"><span
+                                                class="tocnumber">10.2</span> <span
+                                                class="toctext">X-XSS-Protection</span></a></li>
+                                        <li class="toclevel-2 tocsection-19"><a href="#Strict_Transport_Security"><span
+                                                class="tocnumber">10.3</span> <span class="toctext">Strict Transport Security</span></a>
+                                        </li>
+                                        <li class="toclevel-2 tocsection-20"><a href="#Content_Security_Policy"><span
+                                                class="tocnumber">10.4</span> <span class="toctext">Content Security Policy</span></a>
+                                        </li>
+                                        <li class="toclevel-2 tocsection-21"><a href="#Origin"><span class="tocnumber">10.5</span>
+                                            <span class="toctext">Origin</span></a></li>
+                                    </ul>
+                                </li>
+                                <li class="toclevel-1 tocsection-22"><a href="#WebSocket_implementation_hints"><span
+                                        class="tocnumber">11</span> <span
+                                        class="toctext">WebSocket implementation hints</span></a>
+                                    <ul>
+                                        <li class="toclevel-2 tocsection-23"><a href="#Access_filtering"><span
+                                                class="tocnumber">11.1</span> <span
+                                                class="toctext">Access filtering</span></a></li>
+                                        <li class="toclevel-2 tocsection-24"><a
+                                                href="#Authentication_and_Input.2FOutput_validation"><span
+                                                class="tocnumber">11.2</span> <span class="toctext">Authentication and Input/Output validation</span></a>
+                                        </li>
+                                        <li class="toclevel-2 tocsection-25"><a
+                                                href="#Authorization_and_access_token_explicit_invalidation"><span
+                                                class="tocnumber">11.3</span> <span class="toctext">Authorization and access token explicit invalidation</span></a>
+                                        </li>
+                                        <li class="toclevel-2 tocsection-26"><a
+                                                href="#Confidentiality_and_Integrity"><span
+                                                class="tocnumber">11.4</span> <span class="toctext">Confidentiality and Integrity</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="toclevel-1 tocsection-27"><a href="#Authors_and_Primary_Editors"><span
+                                        class="tocnumber">12</span> <span
+                                        class="toctext">Authors and Primary Editors</span></a></li>
+                                <li class="toclevel-1 tocsection-28"><a href="#Other_Cheatsheets"><span
+                                        class="tocnumber">13</span> <span class="toctext">Other Cheatsheets</span></a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <p>The following cheat sheet serves as a guide for implementing HTML 5 in a secure fashion.
+                        </p>
+                        <h1><span class="mw-headline" id="Communication_APIs">Communication APIs</span></h1>
+                        <h2><span class="mw-headline" id="Web_Messaging">Web Messaging</span></h2>
+                        <p>Web Messaging (also known as Cross Domain Messaging) provides a means of messaging between
+                            documents from different origins in a way that is generally safer than the multiple hacks
+                            used in the past to accomplish this task. However, there are still some recommendations to
+                            keep in mind:
+                        </p>
+                        <ul>
+                            <li> When posting a message, explicitly state the expected origin as the second argument to
+                                <tt>postMessage</tt> rather than <tt>*</tt> in order to prevent sending the message to
+                                an unknown origin after a redirect or some other means of the target window's origin
+                                changing.
+                            </li>
+                            <li> The receiving page should <b>always</b>:
+                                <ul>
+                                    <li> Check the <tt>origin</tt> attribute of the sender to verify the data is
+                                        originating from the expected location.
+                                    </li>
+                                    <li> Perform input validation on the <tt>data</tt> attribute of the event to ensure
+                                        that it's in the desired format.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li> Don't assume you have control over the <tt>data</tt> attribute. A single <a
+                                    href="/index.php/Cross-site_Scripting_(XSS)" title="Cross-site Scripting (XSS)">Cross
+                                Site Scripting</a> flaw in the sending page allows an attacker to send messages of any
+                                given format.
+                            </li>
+                            <li> Both pages should only interpret the exchanged messages as <b>data</b>. Never evaluate
+                                passed messages as code (e.g. via <tt>eval()</tt>) or insert it to a page DOM (e.g. via
+                                <tt>innerHTML</tt>), as that would create a DOM-based XSS vulnerability. For more
+                                information see <a href="/index.php/DOM_based_XSS_Prevention_Cheat_Sheet"
+                                                   title="DOM based XSS Prevention Cheat Sheet">DOM based XSS Prevention
+                                    Cheat Sheet</a>.
+                            </li>
+                            <li> To assign the data value to an element, instead of using a insecure method like <tt>element.innerHTML
+                                = data;</tt>, use the safer option: <tt>element.textContent = data;</tt></li>
+                            <li> Check the origin properly exactly to match the FQDN(s) you expect. Note that the
+                                following code: <tt> if(message.orgin.indexOf(".owasp.org")!=-1) { /* ... */ }</tt> is
+                                very insecure and will not have the desired behavior as
+                                <tt>www.owasp.org.attacker.com</tt> will match.
+                            </li>
+                            <li> If you need to embed external content/untrusted gadgets and allow user-controlled
+                                scripts (which is highly discouraged), consider using a JavaScript rewriting framework
+                                such as <a rel="nofollow" class="external text"
+                                           href="http://code.google.com/p/google-caja/">Google Caja</a> or check the
+                                information on <a href="#Sandboxed_frames">sandboxed frames</a>.
+                            </li>
+                        </ul>
+                        <h2><span class="mw-headline"
+                                  id="Cross_Origin_Resource_Sharing">Cross Origin Resource Sharing</span></h2>
+                        <ul>
+                            <li> Validate URLs passed to <tt>XMLHttpRequest.open</tt>. Current browsers allow these URLs
+                                to be cross domain; this behavior can lead to code injection by a remote attacker. Pay
+                                extra attention to absolute URLs.
+                            </li>
+                            <li> Ensure that URLs responding with <tt>Access-Control-Allow-Origin: *</tt> do not include
+                                any sensitive content or information that might aid attacker in further attacks. Use the
+                                <tt>Access-Control-Allow-Origin</tt> header only on chosen URLs that need to be accessed
+                                cross-domain. Don't use the header for the whole domain.
+                            </li>
+                            <li> Allow only selected, trusted domains in the <tt>Access-Control-Allow-Origin</tt>
+                                header. Prefer whitelisting domains over blacklisting or allowing any domain (do not use
+                                <tt>*</tt> wildcard nor blindly return the <tt>Origin</tt> header content without any
+                                checks).
+                            </li>
+                            <li> Keep in mind that CORS does not prevent the requested data from going to an
+                                unauthenticated location. It's still important for the server to perform usual <a
+                                        href="/index.php/Cross-Site_Request_Forgery_(CSRF)"
+                                        title="Cross-Site Request Forgery (CSRF)">CSRF</a> prevention.
+                            </li>
+                            <li> While the RFC recommends a pre-flight request with the <tt>OPTIONS</tt> verb, current
+                                implementations might not perform this request, so it's important that "ordinary" (<tt>GET</tt>
+                                and <tt>POST</tt>) requests perform any access control necessary.
+                            </li>
+                            <li> Discard requests received over plain HTTP with HTTPS origins to prevent mixed content
+                                bugs.
+                            </li>
+                            <li> Don't rely only on the Origin header for Access Control checks. Browser always sends
+                                this header in CORS requests, but may be spoofed outside the browser. Application-level
+                                protocols should be used to protect sensitive data.
+                            </li>
+                        </ul>
+                        <h2><span class="mw-headline" id="WebSockets">WebSockets</span></h2>
+                        <ul>
+                            <li> Drop backward compatibility in implemented client/servers and use only protocol
+                                versions above hybi-00. Popular Hixie-76 version (hiby-00) and older are outdated and
+                                insecure.
+                            </li>
+                            <li> The recommended version supported in latest versions of all current browsers is <a
+                                    rel="nofollow" class="external text" href="http://tools.ietf.org/html/rfc6455">RFC
+                                6455</a> (supported by Firefox 11+, Chrome 16+, Safari 6, Opera 12.50, and IE10).
+                            </li>
+                            <li> While it's relatively easy to tunnel TCP services through WebSockets (e.g. VNC, FTP),
+                                doing so enables access to these tunneled services for the in-browser attacker in case
+                                of a Cross Site Scripting attack. These services might also be called directly from a
+                                malicious page or program.
+                            </li>
+                            <li> The protocol doesn't handle authorization and/or authentication. Application-level
+                                protocols should handle that separately in case sensitive data is being transferred.
+                            </li>
+                            <li> Process the messages received by the websocket as data. Don't try to assign it directly
+                                to the DOM nor evaluate as code. If the response is JSON, never use the insecure eval()
+                                function; use the safe option JSON.parse() instead.
+                            </li>
+                            <li> Endpoints exposed through the <tt>ws://</tt> protocol are easily reversible to plain
+                                text. Only <tt>wss://</tt> (WebSockets over SSL/TLS) should be used for protection
+                                against Man-In-The-Middle attacks.
+                            </li>
+                            <li> Spoofing the client is possible outside a browser, so the WebSockets server should be
+                                able to handle incorrect/malicious input. Always validate input coming from the remote
+                                site, as it might have been altered.
+                            </li>
+                            <li> When implementing servers, check the <tt>Origin:</tt> header in the Websockets
+                                handshake. Though it might be spoofed outside a browser, browsers always add the Origin
+                                of the page that initiated the Websockets connection.
+                            </li>
+                            <li> As a WebSockets client in a browser is accessible through JavaScript calls, all
+                                Websockets communication can be spoofed or hijacked through <a
+                                        href="/index.php/Cross_Site_Scripting_Flaw" title="Cross Site Scripting Flaw">Cross
+                                    Site Scripting</a>. Always validate data coming through a WebSockets connection.
+                            </li>
+                        </ul>
+                        <h2><span class="mw-headline" id="Server-Sent_Events">Server-Sent Events</span></h2>
+                        <ul>
+                            <li> Validate URLs passed to the <tt>EventSource</tt> constructor, even though only
+                                same-origin URLs are allowed.
+                            </li>
+                            <li> As mentioned before, process the messages (<tt>event.data</tt>) as data and never
+                                evaluate the content as HTML or script code.
+                            </li>
+                            <li> Always check the origin attribute of the message (<tt>event.origin</tt>) to ensure the
+                                message is coming from a trusted domain. Use a whitelist approach.
+                            </li>
+                        </ul>
+                        <h1><span class="mw-headline" id="Storage_APIs">Storage APIs</span></h1>
+                        <h2><span class="mw-headline" id="Local_Storage">Local Storage</span></h2>
+                        <ul>
+                            <li>Also known as Offline Storage, Web Storage. Underlying storage mechanism may vary from
+                                one user agent to the next. In other words, any authentication your application requires
+                                can be bypassed by a user with local privileges to the machine on which the data is
+                                stored. Therefore, it's recommended not to store any sensitive information in local
+                                storage.
+                            </li>
+                            <li>Use the object sessionStorage instead of localStorage if persistent storage is not
+                                needed. sessionStorage object is available only to that window/tab until the window is
+                                closed.
+                            </li>
+                            <li>A single <a href="/index.php/Cross-site_Scripting_(XSS)"
+                                            title="Cross-site Scripting (XSS)">Cross Site Scripting</a> can be used to
+                                steal all the data in these objects, so again it's recommended not to store sensitive
+                                information in local storage.
+                            </li>
+                            <li>A single <a href="/index.php/Cross-site_Scripting_(XSS)"
+                                            title="Cross-site Scripting (XSS)">Cross Site Scripting</a> can be used to
+                                load malicious data into these objects too, so don't consider objects in these to be
+                                trusted.
+                            </li>
+                            <li>Pay extra attention to “localStorage.getItem” and “setItem” calls implemented in HTML5
+                                page. It helps in detecting when developers build solutions that put sensitive
+                                information in local storage, which is a bad practice.
+                            </li>
+                            <li>Do not store session identifiers in local storage as the data is always accesible by
+                                JavaScript. Cookies can mitigate this risk using the <tt>httpOnly</tt> flag.
+                            </li>
+                            <li>There is no way to restrict the visibility of an object to a specific path like with the
+                                attribute path of HTTP Cookies, every object is shared within an origin and protected
+                                with the Same Origin Policy. Avoid host multiple applications on the same origin, all of
+                                them would share the same localStorage object, use different subdomains instead.
+                            </li>
+                        </ul>
+                        <h2><span class="mw-headline" id="Client-side_databases">Client-side databases</span></h2>
+                        <ul>
+                            <li> On November 2010, the W3C announced Web SQL Database (relational SQL database) as a
+                                deprecated specification. A new standard Indexed Database API or IndexedDB (formerly
+                                WebSimpleDB) is actively developed, which provides key/value database storage and
+                                methods for performing advanced queries.
+                            </li>
+                            <li> Underlying storage mechanisms may vary from one user agent to the next. In other words,
+                                any authentication your application requires can be bypassed by a user with local
+                                privileges to the machine on which the data is stored. Therefore, it's recommended not
+                                to store any sensitive information in local storage.
+                            </li>
+                            <li> If utilized, WebDatabase content on the client side can be vulnerable to SQL injection
+                                and needs to have proper validation and parameterization.
+                            </li>
+                            <li> Like Local Storage, a single <a href="/index.php/Cross-site_Scripting_(XSS)"
+                                                                 title="Cross-site Scripting (XSS)">Cross Site
+                                Scripting</a> can be used to load malicious data into a web database as well. Don't
+                                consider data in these to be trusted.
+                            </li>
+                        </ul>
+                        <h1><span class="mw-headline" id="Geolocation">Geolocation</span></h1>
+                        <ul>
+                            <li> The Geolocation RFC recommends that the user agent ask the user's permission before
+                                calculating location. Whether or how this decision is remembered varies from browser to
+                                browser. Some user agents require the user to visit the page again in order to turn off
+                                the ability to get the user's location without asking, so for privacy reasons, it's
+                                recommended to require user input before calling <tt>getCurrentPosition</tt> or <tt>watchPosition</tt>.
+                            </li>
+                        </ul>
+                        <h1><span class="mw-headline" id="Web_Workers">Web Workers</span></h1>
+                        <ul>
+                            <li> Web Workers are allowed to use <tt>XMLHttpRequest</tt> object to perform in-domain and
+                                Cross Origin Resource Sharing requests. See relevant section of this Cheat Sheet to
+                                ensure CORS security.
+                            </li>
+                            <li> While Web Workers don't have access to DOM of the calling page, malicious Web Workers
+                                can use excessive CPU for computation, leading to Denial of Service condition or abuse
+                                Cross Origin Resource Sharing for further exploitation. Ensure code in all Web Workers
+                                scripts is not malevolent. Don't allow creating Web Worker scripts from user supplied
+                                input.
+                            </li>
+                            <li> Validate messages exchanged with a Web Worker. Do not try to exchange snippets of
+                                Javascript for evaluation e.g. via eval() as that could introduce a&#160;<a
+                                        href="/index.php/DOM_Based_XSS" title="DOM Based XSS">DOM Based XSS</a>&#160;vulnerability.
+                            </li>
+                        </ul>
+                        <h1><span class="mw-headline" id="Tabnabbing">Tabnabbing</span></h1>
+                        <p>Attack is described in details into this <a href="/index.php/Reverse_Tabnabbing"
+                                                                       title="Reverse Tabnabbing">article</a>.
+                        </p>
+                        <p><br/>
+                            To resume, it's the capacity from a new opened page to act on parent page's content or
+                            location via the back link exposed by the <b>opener</b> javascript object instance.
+                        </p>
+                        <p><br/>
+                            It apply to html link or javascript <code>window.open</code> function using the
+                            attribute/instruction <code>target</code> to specify a <a rel="nofollow"
+                                                                                      class="external text"
+                                                                                      href="https://www.w3schools.com/tags/att_a_target.asp">target
+                                loading location</a> that do not replace the current location and then let the current
+                            window/tab available.
+                        </p>
+                        <p><br/>
+                            To prevent this issue the following actions are available:
+                        </p>
+                        <ol>
+                            <li> Cut the back link between the parent and the child pages:
+                                <ul>
+                                    <li> For html link:
+                                        <ul>
+                                            <li> To cut this back link then add the attribute
+                                                <code>rel="noopener"</code> on the tag used to create the link from the
+                                                parent page to the child page. This attribute value cut the link but,
+                                                depending on the browser, let referrer information be present in the
+                                                request to the child page.
+                                            </li>
+                                            <li> To remove also the referrer information then use this attribute value:
+                                                <code>rel="noopener noreferrer"</code>.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li> For javascript <code>window.open</code> function, add the values <code>noopener,noreferrer</code>
+                                        in the <b><a rel="nofollow" class="external text"
+                                                     href="https://developer.mozilla.org/en-US/docs/Web/API/Window/open">windowFeatures</a></b>
+                                        parameter of the <code>window.open</code> function.
+                                    </li>
+                                </ul>
+                            </li>
+                        </ol>
+                        <p><br/>
+                            As the behavior using the elements above is different between the browsers either using html
+                            link or javascript to open a window (or tab) then use this configuration to maximize the
+                            cross supports:
+                        </p>
+                        <ul>
+                            <li> For html link, add the attribute <code>rel="noopener noreferrer"</code> for every
+                                links.
+                            </li>
+                            <li> For Javascript, use this function to open a window (or tab):</li>
+                        </ul>
+                        <div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="kd">function</span> <span
+                                class="nx">openPopup</span><span class="p">(</span><span class="nx">url</span><span
+                                class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span
+                                class="nx">windowFeatures</span><span class="p">){</span>
+  <span class="c1">//Open the popup and set the opener and referrer policy instruction</span>
+  <span class="kd">var</span> <span class="nx">newWindow</span> <span class="o">=</span> <span
+                                    class="nb">window</span><span class="p">.</span><span class="nx">open</span><span
+                                    class="p">(</span><span class="nx">url</span><span class="p">,</span> <span
+                                    class="nx">name</span><span class="p">,</span> <span class="s1">&#39;noopener,noreferrer,&#39;</span> <span
+                                    class="o">+</span> <span class="nx">windowFeatures</span><span class="p">);</span>
+  <span class="c1">//Reset the opener link</span>
+  <span class="nx">newWindow</span><span class="p">.</span><span class="nx">opener</span> <span class="o">=</span> <span
+                                    class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+                        </div>
+                        <ul>
+                            <li> Add the HTTP response header <code>Referrer-Policy: no-referrer</code> the every HTTP
+                                responses send by the application (<a href="/index.php/OWASP_Secure_Headers_Project#rp"
+                                                                      title="OWASP Secure Headers Project">Header
+                                    Referrer-Policy information</a>). This configuration will ensure that no referrer
+                                information is sent along with requests from page.
+                            </li>
+                        </ul>
+                        <p><br/>
+                            Compatibility matrix:
+                        </p>
+                        <ul>
+                            <li><a rel="nofollow" class="external free" href="https://caniuse.com/#search=noopener">https://caniuse.com/#search=noopener</a>
+                            </li>
+                            <li><a rel="nofollow" class="external free" href="https://caniuse.com/#search=noreferrer">https://caniuse.com/#search=noreferrer</a>
+                            </li>
+                            <li><a rel="nofollow" class="external free"
+                                   href="https://caniuse.com/#feat=referrer-policy">https://caniuse.com/#feat=referrer-policy</a>
+                            </li>
+                        </ul>
+                        <h1><span class="mw-headline" id="Sandboxed_frames">Sandboxed frames</span></h1>
+                        <ul>
+                            <li> Use the <tt>sandbox</tt> attribute of an <tt>iframe</tt> for untrusted content.</li>
+                            <li> The <tt>sandbox</tt> attribute of an <tt>iframe</tt> enables restrictions on content
+                                within a <tt>iframe</tt>. The following restrictions are active when the
+                                <tt>sandbox</tt> attribute is set:
+                                <ol>
+                                    <li> All markup is treated as being from a unique origin.</li>
+                                    <li> All forms and scripts are disabled.</li>
+                                    <li> All links are prevented from targeting other browsing contexts.</li>
+                                    <li> All features that triggers automatically are blocked.</li>
+                                    <li> All plugins are disabled.</li>
+                                </ol>
+                            </li>
+                        </ul>
+                        <p>It is possible to have a <a rel="nofollow" class="external text"
+                                                       href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#attr-iframe-sandbox">fine-grained
+                            control</a> over <tt>iframe</tt> capabilities using the value of the <tt>sandbox</tt>
+                            attribute.
+                        </p>
+                        <ul>
+                            <li> In old versions of user agents where this feature is not supported, this attribute will
+                                be ignored. Use this feature as an additional layer of protection or check if the
+                                browser supports sandboxed frames and only show the untrusted content if supported.
+                            </li>
+                            <li> Apart from this attribute, to prevent Clickjacking attacks and unsolicited framing it
+                                is encouraged to use the header <tt>X-Frame-Options</tt> which supports the
+                                <tt>deny</tt> and <tt>same-origin</tt> values. Other solutions like framebusting <tt>if(window!==
+                                    window.top) { window.top.location = location; }</tt> are not recommended.
+                            </li>
+                        </ul>
+                        <h1><span class="mw-headline" id="Offline_Applications">Offline Applications</span></h1>
+                        <ul>
+                            <li> Whether the user agent requests permission to the user to store data for offline
+                                browsing and when this cache is deleted varies from one browser to the next. Cache
+                                poisoning is an issue if a user connects through insecure networks, so for privacy
+                                reasons it is encouraged to require user input before sending any <tt>manifest</tt>
+                                file.
+                            </li>
+                            <li> Users should only cache trusted websites and clean the cache after browsing through
+                                open or insecure networks.
+                            </li>
+                        </ul>
+                        <h1><span class="mw-headline" id="Progressive_Enhancements_and_Graceful_Degradation_Risks">Progressive Enhancements and Graceful Degradation Risks</span>
+                        </h1>
+                        <ul>
+                            <li> The best practice now is to determine the capabilities that a browser supports and
+                                augment with some type of substitute for capabilities that are not directly supported.
+                                This may mean an onion-like element, e.g. falling through to a Flash Player if the &lt;video&gt;
+                                tag is unsupported, or it may mean additional scripting code from various sources that
+                                should be code reviewed.
+                            </li>
+                        </ul>
+                        <h1><span class="mw-headline" id="HTTP_Headers_to_enhance_security">HTTP Headers to enhance security</span>
+                        </h1>
+                        <h2><span class="mw-headline" id="X-Frame-Options">X-Frame-Options</span></h2>
+                        <ul>
+                            <li> This header can be used to prevent ClickJacking in modern browsers.</li>
+                            <li> Use the <tt>same-origin</tt> attribute to allow being framed from urls of the same
+                                origin or <tt>deny</tt> to block all. Example: <tt>X-Frame-Options: DENY</tt></li>
+                            <li> For more information on Clickjacking Defense please see the <a
+                                    href="/index.php/Clickjacking_Defense_Cheat_Sheet"
+                                    title="Clickjacking Defense Cheat Sheet">Clickjacking Defense Cheat Sheet</a>.
+                            </li>
+                        </ul>
+                        <h2><span class="mw-headline" id="X-XSS-Protection">X-XSS-Protection</span></h2>
+                        <ul>
+                            <li> Enable XSS filter (only works for Reflected XSS).</li>
+                            <li> Example: <tt>X-XSS-Protection: 1; mode=block</tt></li>
+                        </ul>
+                        <h2><span class="mw-headline" id="Strict_Transport_Security">Strict Transport Security</span>
+                        </h2>
+                        <ul>
+                            <li> Force every browser request to be sent over TLS/SSL (this can prevent SSL strip
+                                attacks).
+                            </li>
+                            <li> Use includeSubDomains.</li>
+                            <li> Example: Strict-Transport-Security: max-age=8640000; includeSubDomains</li>
+                        </ul>
+                        <h2><span class="mw-headline" id="Content_Security_Policy">Content Security Policy</span></h2>
+                        <ul>
+                            <li> Policy to define a set of content restrictions for web resources which aims to mitigate
+                                web application vulnerabilities such as Cross Site Scripting.
+                            </li>
+                            <li> Example: Content-Security-Policy: allow 'self'; img-src *; object-src
+                                media.example.com; script-src js.example.com
+                            </li>
+                        </ul>
+                        <h2><span class="mw-headline" id="Origin">Origin</span></h2>
+                        <ul>
+                            <li> Sent by CORS/WebSockets requests.</li>
+                            <li> There is a proposal to use this header to mitigate CSRF attacks, but is not yet
+                                implemented by vendors for this purpose.
+                            </li>
+                        </ul>
+                        <h1><span class="mw-headline"
+                                  id="WebSocket_implementation_hints">WebSocket implementation hints</span></h1>
+                        <p>In addition to the elements mentioned above, this is the list of area for which caution must
+                            be taken during the implementation.
+                        </p>
+                        <ul>
+                            <li> Access filtering through the "Origin" HTTP request header</li>
+                            <li> Input / output validation</li>
+                            <li> Authentication</li>
+                            <li> Authorization</li>
+                            <li> Access token explicit invalidation</li>
+                            <li> Confidentiality and Integrity</li>
+                        </ul>
+                        <p>The section below will propose some implementation hints on every area and will be along with
+                            an application example showing all the points described.
+                        </p>
+                        <p>The complete source code of the example application is available <a rel="nofollow"
+                                                                                               class="external text"
+                                                                                               href="https://github.com/righettod/poc-websocket">here</a>.
+                        </p>
+                        <h2><span class="mw-headline" id="Access_filtering">Access filtering</span></h2>
+                        <p>During a websocket channel initiation, the browser send the <b>Origin</b> HTTP request header
+                            that contain th source domain initiation the request to handshake. Event if this header can
+                            be spoofed in a forged HTTP request (not browser based), it cannot be overrided or forced in
+                            a browser context. It then represent a good candidate to apply filtering according to an
+                            expected value.
+                        </p>
+                        <p>An example of attack using this vector and named <i>Cross-Site WebSocket Hijacking
+                            (CSWSH)</i> is described <a rel="nofollow" class="external text"
+                                                        href="https://www.christian-schneider.net/CrossSiteWebSocketHijacking.html">here</a>.
+                        </p>
+                        <p>The code below define a configuration that apply filtering based on a "whitelist" of origins.
+                            This ensure that only allowed origins can establish a full handshake:
+                        </p>
+                        <div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="kn">import</span> <span
+                                class="nn">org.owasp.encoder.Encode</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.Logger</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.LoggerFactory</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.websocket.server.ServerEndpointConfig</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Setup handshake rules applied to all WebSocket endpoints of the application.</span>
+<span class="cm"> * Use to setup the Access Filtering using &quot;Origin&quot; HTTP header as input information.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @see &quot;http://docs.oracle.com/javaee/7/api/index.html?javax/websocket/server/ServerEndpointConfig.Configurator.html&quot;</span>
+<span class="cm"> * @see &quot;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin&quot;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">EndpointConfigurator</span> <span
+                                    class="kd">extends</span> <span class="n">ServerEndpointConfig</span><span
+                                    class="o">.</span><span class="na">Configurator</span> <span class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Logger</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span
+                                    class="n">Logger</span> <span class="n">LOG</span> <span class="o">=</span> <span
+                                    class="n">LoggerFactory</span><span class="o">.</span><span
+                                    class="na">getLogger</span><span class="o">(</span><span class="n">EndpointConfigurator</span><span
+                                    class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Get the expected source origins from a JVM property in order to allow external configuration</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span
+                                    class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span
+                                    class="o">&gt;</span> <span class="n">EXPECTED_ORIGINS</span> <span
+                                    class="o">=</span>  <span class="n">Arrays</span><span class="o">.</span><span
+                                    class="na">asList</span><span class="o">(</span><span class="n">System</span><span
+                                    class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span
+                                    class="s">&quot;source.origins&quot;</span><span class="o">).</span><span
+                                    class="na">split</span><span class="o">(</span><span
+                                    class="s">&quot;;&quot;</span><span class="o">));</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * {@inheritDoc}</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">checkOrigin</span><span
+                                    class="o">(</span><span class="n">String</span> <span
+                                    class="n">originHeaderValue</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">boolean</span> <span class="n">isAllowed</span> <span class="o">=</span> <span class="n">EXPECTED_ORIGINS</span><span
+                                    class="o">.</span><span class="na">contains</span><span class="o">(</span><span
+                                    class="n">originHeaderValue</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">safeOriginValue</span> <span class="o">=</span> <span class="n">Encode</span><span
+                                    class="o">.</span><span class="na">forHtmlContent</span><span
+                                    class="o">(</span><span class="n">originHeaderValue</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">isAllowed</span><span class="o">)</span> <span
+                                    class="o">{</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span
+                                    class="s">&quot;[EndpointConfigurator] New handshake request received from {} and was accepted.&quot;</span><span
+                                    class="o">,</span> <span class="n">safeOriginValue</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span
+                                    class="s">&quot;[EndpointConfigurator] New handshake request received from {} and was rejected !&quot;</span><span
+                                    class="o">,</span> <span class="n">safeOriginValue</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">isAllowed</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre>
+                        </div>
+                        <h2><span class="mw-headline" id="Authentication_and_Input.2FOutput_validation">Authentication and Input/Output validation</span>
+                        </h2>
+                        <p>When using websocket as communication channel, it's important to use an authentication method
+                            allowing the user to receive an access <i>Token</i> that is not automatically sent by the
+                            browser and then must be expliclty sent by the client code during each exchange.
+                        </p>
+                        <p><a rel="nofollow" class="external text" href="https://jwt.io/introduction/">JSON Web
+                            Token</a> is a good candidate because it allow to transport access ticket information in a
+                            stateless and not alterable way. Moreover, it define a validity timeframe. You can find
+                            additional information about JWT token hardening on this <a rel="nofollow"
+                                                                                        class="external text"
+                                                                                        href="https://www.owasp.org/index.php/JSON_Web_Token_(JWT)_Cheat_Sheet_for_Java">article</a>.
+                        </p>
+                        <p><a rel="nofollow" class="external text" href="http://json-schema.org/">JSON Validation
+                            Schema</a> are used to define and validate the expected content in input and ouput messages.
+                        </p>
+                        <p>The code below define the complete authentication messages flow handling:
+                        </p>
+                        <p><b>Authentication Web Socket endpoint</b> - Provide a WS endpoint the enable authentication
+                            exchange
+                        </p>
+                        <div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="kn">import</span> <span
+                                class="nn">org.owasp.pocwebsocket.configurator.EndpointConfigurator</span><span
+                                class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.decoder.AuthenticationRequestDecoder</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.encoder.AuthenticationResponseEncoder</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.handler.AuthenticationMessageHandler</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.Logger</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.LoggerFactory</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.websocket.CloseReason</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.OnClose</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.OnError</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.OnOpen</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.Session</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.server.ServerEndpoint</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Class in charge of managing the client authentication.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @see &quot;http://docs.oracle.com/javaee/7/api/javax/websocket/server/ServerEndpointConfig.Configurator.html&quot;</span>
+<span class="cm"> * @see &quot;http://svn.apache.org/viewvc/tomcat/trunk/webapps/examples/WEB-INF/classes/websocket/&quot;</span>
+<span class="cm"> */</span>
+<span class="nd">@ServerEndpoint</span><span class="o">(</span><span class="n">value</span> <span
+                                    class="o">=</span> <span class="s">&quot;/auth&quot;</span><span class="o">,</span> <span
+                                    class="n">configurator</span> <span class="o">=</span> <span class="n">EndpointConfigurator</span><span
+                                    class="o">.</span><span class="na">class</span><span class="o">,</span> <span
+                                    class="n">subprotocols</span> <span class="o">=</span> <span class="o">{</span><span
+                                    class="s">&quot;authentication&quot;</span><span class="o">},</span> <span
+                                    class="n">encoders</span> <span class="o">=</span> <span class="o">{</span><span
+                                    class="n">AuthenticationResponseEncoder</span><span class="o">.</span><span
+                                    class="na">class</span><span class="o">},</span> <span
+                                    class="n">decoders</span> <span class="o">=</span> <span class="o">{</span><span
+                                    class="n">AuthenticationRequestDecoder</span><span class="o">.</span><span
+                                    class="na">class</span><span class="o">})</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AuthenticationEndpoint</span> <span
+                                    class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Logger</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span
+                                    class="n">Logger</span> <span class="n">LOG</span> <span class="o">=</span> <span
+                                    class="n">LoggerFactory</span><span class="o">.</span><span
+                                    class="na">getLogger</span><span class="o">(</span><span class="n">AuthenticationEndpoint</span><span
+                                    class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Handle the beginning of an exchange</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param session Exchange session information</span>
+<span class="cm">     */</span>
+    <span class="nd">@OnOpen</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span
+                                    class="o">(</span><span class="n">Session</span> <span class="n">session</span><span
+                                    class="o">)</span> <span class="o">{</span>
+        <span class="c1">//Define connection idle timeout and message limits in order to mitigate as much as possible DOS attacks using massive connection opening or massive big messages sending</span>
+        <span class="kt">int</span> <span class="n">msgMaxSize</span> <span class="o">=</span> <span
+                                    class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span
+                                    class="o">;</span><span class="c1">//1 MB</span>
+        <span class="n">session</span><span class="o">.</span><span class="na">setMaxIdleTimeout</span><span
+                                    class="o">(</span><span class="mi">60000</span><span class="o">);</span><span
+                                    class="c1">//1 minute</span>
+        <span class="n">session</span><span class="o">.</span><span class="na">setMaxTextMessageBufferSize</span><span
+                                    class="o">(</span><span class="n">msgMaxSize</span><span class="o">);</span>
+        <span class="n">session</span><span class="o">.</span><span class="na">setMaxBinaryMessageBufferSize</span><span
+                                    class="o">(</span><span class="n">msgMaxSize</span><span class="o">);</span>
+        <span class="c1">//Log exchange start</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span
+                                    class="s">&quot;[AuthenticationEndpoint] Session {} started&quot;</span><span
+                                    class="o">,</span> <span class="n">session</span><span class="o">.</span><span
+                                    class="na">getId</span><span class="o">());</span>
+        <span class="c1">//Affect a new message handler instance in order to process the exchange</span>
+        <span class="n">session</span><span class="o">.</span><span class="na">addMessageHandler</span><span
+                                    class="o">(</span><span class="k">new</span> <span class="n">AuthenticationMessageHandler</span><span
+                                    class="o">(</span><span class="n">session</span><span class="o">.</span><span
+                                    class="na">getBasicRemote</span><span class="o">()));</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span
+                                    class="s">&quot;[AuthenticationEndpoint] Session {} message handler affected for processing&quot;</span><span
+                                    class="o">,</span> <span class="n">session</span><span class="o">.</span><span
+                                    class="na">getId</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Handle error case</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param session Exchange session information</span>
+<span class="cm">     * @param thr     Error details</span>
+<span class="cm">     */</span>
+    <span class="nd">@OnError</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onError</span><span
+                                    class="o">(</span><span class="n">Session</span> <span class="n">session</span><span
+                                    class="o">,</span> <span class="n">Throwable</span> <span class="n">thr</span><span
+                                    class="o">)</span> <span class="o">{</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span
+                                    class="s">&quot;[AuthenticationEndpoint] Error occur in session {}&quot;</span><span
+                                    class="o">,</span> <span class="n">session</span><span class="o">.</span><span
+                                    class="na">getId</span><span class="o">(),</span> <span class="n">thr</span><span
+                                    class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Handle close event</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param session     Exchange session information</span>
+<span class="cm">     * @param closeReason Exchange closing reason</span>
+<span class="cm">     */</span>
+    <span class="nd">@OnClose</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClose</span><span
+                                    class="o">(</span><span class="n">Session</span> <span class="n">session</span><span
+                                    class="o">,</span> <span class="n">CloseReason</span> <span
+                                    class="n">closeReason</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span
+                                    class="s">&quot;[AuthenticationEndpoint] Session {} closed: {}&quot;</span><span
+                                    class="o">,</span> <span class="n">session</span><span class="o">.</span><span
+                                    class="na">getId</span><span class="o">(),</span> <span class="n">closeReason</span><span
+                                    class="o">.</span><span class="na">getReasonPhrase</span><span class="o">());</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre>
+                        </div>
+                        <p><br/>
+                            <b>Authentication message handler</b> - Handle all authentication requests
+                        </p>
+                        <div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="kn">import</span> <span
+                                class="nn">org.owasp.pocwebsocket.enumeration.AccessLevel</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.util.AuthenticationUtils</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.vo.AuthenticationRequest</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.vo.AuthenticationResponse</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.encoder.Encode</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.Logger</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.LoggerFactory</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.websocket.EncodeException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.MessageHandler</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.RemoteEndpoint</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Handle authentication message flow</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AuthenticationMessageHandler</span> <span
+                                    class="kd">implements</span> <span class="n">MessageHandler</span><span
+                                    class="o">.</span><span class="na">Whole</span><span class="o">&lt;</span><span
+                                    class="n">AuthenticationRequest</span><span class="o">&gt;</span> <span
+                                    class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span
+                                    class="n">Logger</span> <span class="n">LOG</span> <span class="o">=</span> <span
+                                    class="n">LoggerFactory</span><span class="o">.</span><span
+                                    class="na">getLogger</span><span class="o">(</span><span class="n">AuthenticationMessageHandler</span><span
+                                    class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Reference to the communication channel with the client</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">RemoteEndpoint</span><span class="o">.</span><span
+                                    class="na">Basic</span> <span class="n">clientConnection</span><span
+                                    class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Constructor</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param clientConnection Reference to the communication channel with the client</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">AuthenticationMessageHandler</span><span class="o">(</span><span
+                                    class="n">RemoteEndpoint</span><span class="o">.</span><span class="na">Basic</span> <span
+                                    class="n">clientConnection</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">clientConnection</span> <span
+                                    class="o">=</span> <span class="n">clientConnection</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * {@inheritDoc}</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onMessage</span><span
+                                    class="o">(</span><span class="n">AuthenticationRequest</span> <span class="n">message</span><span
+                                    class="o">)</span> <span class="o">{</span>
+        <span class="n">AuthenticationResponse</span> <span class="n">response</span> <span class="o">=</span> <span
+                                    class="kc">null</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="c1">//Authenticate</span>
+            <span class="n">String</span> <span class="n">authenticationToken</span> <span class="o">=</span> <span
+                                    class="s">&quot;&quot;</span><span class="o">;</span>
+            <span class="n">String</span> <span class="n">accessLevel</span> <span class="o">=</span> <span class="k">this</span><span
+                                    class="o">.</span><span class="na">authenticate</span><span class="o">(</span><span
+                                    class="n">message</span><span class="o">.</span><span
+                                    class="na">getLogin</span><span class="o">(),</span> <span
+                                    class="n">message</span><span class="o">.</span><span
+                                    class="na">getPassword</span><span class="o">());</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">accessLevel</span> <span
+                                    class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span
+                                    class="o">{</span>
+                <span class="c1">//Create a simple JSON token representing the authentication profile</span>
+                <span class="n">authenticationToken</span> <span class="o">=</span> <span
+                                    class="n">AuthenticationUtils</span><span class="o">.</span><span class="na">issueToken</span><span
+                                    class="o">(</span><span class="n">message</span><span class="o">.</span><span
+                                    class="na">getLogin</span><span class="o">(),</span> <span
+                                    class="n">accessLevel</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="c1">//Build the response object</span>
+            <span class="n">String</span> <span class="n">safeLoginValue</span> <span class="o">=</span> <span
+                                    class="n">Encode</span><span class="o">.</span><span
+                                    class="na">forHtmlContent</span><span class="o">(</span><span
+                                    class="n">message</span><span class="o">.</span><span
+                                    class="na">getLogin</span><span class="o">());</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">authenticationToken</span><span
+                                    class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span
+                                    class="o">{</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AuthenticationResponse</span><span
+                                    class="o">(</span><span class="kc">true</span><span class="o">,</span> <span
+                                    class="n">authenticationToken</span><span class="o">,</span> <span class="s">&quot;Authentication succeed !&quot;</span><span
+                                    class="o">);</span>
+                <span class="n">LOG</span><span class="o">.</span><span class="na">info</span><span
+                                    class="o">(</span><span class="s">&quot;[AuthenticationMessageHandler] User {} authentication succeed.&quot;</span><span
+                                    class="o">,</span> <span class="n">safeLoginValue</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AuthenticationResponse</span><span
+                                    class="o">(</span><span class="kc">false</span><span class="o">,</span> <span
+                                    class="n">authenticationToken</span><span class="o">,</span> <span class="s">&quot;Authentication failed !&quot;</span><span
+                                    class="o">);</span>
+                <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span
+                                    class="o">(</span><span class="s">&quot;[AuthenticationMessageHandler] User {} authentication failed.&quot;</span><span
+                                    class="o">,</span> <span class="n">safeLoginValue</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span
+                                    class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span
+                                    class="o">{</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span
+                                    class="s">&quot;[AuthenticationMessageHandler] Error occur in authentication process.&quot;</span><span
+                                    class="o">,</span> <span class="n">e</span><span class="o">);</span>
+            <span class="c1">//Build the response object indicating that authentication fail</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AuthenticationResponse</span><span
+                                    class="o">(</span><span class="kc">false</span><span class="o">,</span> <span
+                                    class="s">&quot;&quot;</span><span class="o">,</span> <span class="s">&quot;Authentication failed !&quot;</span><span
+                                    class="o">);</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="c1">//Send response</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">clientConnection</span><span
+                                    class="o">.</span><span class="na">sendObject</span><span class="o">(</span><span
+                                    class="n">response</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span
+                                    class="n">IOException</span> <span class="o">|</span> <span class="n">EncodeException</span> <span
+                                    class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">LOG</span><span class="o">.</span><span class="na">error</span><span
+                                    class="o">(</span><span class="s">&quot;[AuthenticationMessageHandler] Error occur in response object sending.&quot;</span><span
+                                    class="o">,</span> <span class="n">e</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Authenticate the user</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param login    User login</span>
+<span class="cm">     * @param password User password</span>
+<span class="cm">     * @return The access level if the authentication succeed or NULL if the authentication failed</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="nf">authenticate</span><span
+                                    class="o">(</span><span class="n">String</span> <span class="n">login</span><span
+                                    class="o">,</span> <span class="n">String</span> <span
+                                    class="n">password</span><span class="o">)</span> <span class="o">{</span>
+      <span class="o">....</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+                        </div>
+                        <p><br/>
+                            <b>Utility class to manage JWT token</b> - Handle the issuing and the validation of the
+                            access token. Simple JWT token has been used for the example (focus was made here on the
+                            global WS endpoint implementation) here without extra hardening (see <a rel="nofollow"
+                                                                                                    class="external text"
+                                                                                                    href="https://www.owasp.org/index.php/JSON_Web_Token_(JWT)_Cheat_Sheet_for_Java">this
+                                article</a> to apply extra hardening on the JWT token)
+                        </p>
+                        <div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="kn">import</span> <span
+                                class="nn">com.auth0.jwt.JWT</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.auth0.jwt.JWTVerifier</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.auth0.jwt.algorithms.Algorithm</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.auth0.jwt.interfaces.DecodedJWT</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.file.Files</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.file.Paths</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Calendar</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Locale</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Utility class to manage the authentication JWT token</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AuthenticationUtils</span> <span
+                                    class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Build a JWT token for a user</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param login       User login</span>
+<span class="cm">     * @param accessLevel Access level of the user</span>
+<span class="cm">     * @return The Base64 encoded JWT token</span>
+<span class="cm">     * @throws Exception If any error occur during the issuing</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">issueToken</span><span
+                                    class="o">(</span><span class="n">String</span> <span class="n">login</span><span
+                                    class="o">,</span> <span class="n">String</span> <span
+                                    class="n">accessLevel</span><span class="o">)</span> <span class="kd">throws</span> <span
+                                    class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">//Issue a JWT token with validity of 30 minutes</span>
+        <span class="n">Algorithm</span> <span class="n">algorithm</span> <span class="o">=</span> <span class="n">Algorithm</span><span
+                                    class="o">.</span><span class="na">HMAC256</span><span class="o">(</span><span
+                                    class="n">loadSecret</span><span class="o">());</span>
+        <span class="n">Calendar</span> <span class="n">c</span> <span class="o">=</span> <span
+                                    class="n">Calendar</span><span class="o">.</span><span class="na">getInstance</span><span
+                                    class="o">();</span>
+        <span class="n">c</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span
+                                    class="n">Calendar</span><span class="o">.</span><span class="na">MINUTE</span><span
+                                    class="o">,</span> <span class="mi">30</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">JWT</span><span class="o">.</span><span
+                                    class="na">create</span><span class="o">().</span><span class="na">withIssuer</span><span
+                                    class="o">(</span><span class="s">&quot;WEBSOCKET-SERVER&quot;</span><span
+                                    class="o">).</span><span class="na">withSubject</span><span class="o">(</span><span
+                                    class="n">login</span><span class="o">).</span><span class="na">withExpiresAt</span><span
+                                    class="o">(</span><span class="n">c</span><span class="o">.</span><span class="na">getTime</span><span
+                                    class="o">()).</span><span class="na">withClaim</span><span class="o">(</span><span
+                                    class="s">&quot;access_level&quot;</span><span class="o">,</span> <span class="n">accessLevel</span><span
+                                    class="o">.</span><span class="na">trim</span><span class="o">().</span><span
+                                    class="na">toUpperCase</span><span class="o">(</span><span
+                                    class="n">Locale</span><span class="o">.</span><span class="na">US</span><span
+                                    class="o">)).</span><span class="na">sign</span><span class="o">(</span><span
+                                    class="n">algorithm</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Verify the validity of the provided JWT token</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param token JWT token encoded to verify</span>
+<span class="cm">     * @return The verified and decoded token with user authentication and authorization (access level) information</span>
+<span class="cm">     * @throws Exception If any error occur during the token validation</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">DecodedJWT</span> <span class="nf">validateToken</span><span
+                                    class="o">(</span><span class="n">String</span> <span class="n">token</span><span
+                                    class="o">)</span> <span class="kd">throws</span> <span
+                                    class="n">Exception</span> <span class="o">{</span>
+        <span class="n">Algorithm</span> <span class="n">algorithm</span> <span class="o">=</span> <span class="n">Algorithm</span><span
+                                    class="o">.</span><span class="na">HMAC256</span><span class="o">(</span><span
+                                    class="n">loadSecret</span><span class="o">());</span>
+        <span class="n">JWTVerifier</span> <span class="n">verifier</span> <span class="o">=</span> <span
+                                    class="n">JWT</span><span class="o">.</span><span class="na">require</span><span
+                                    class="o">(</span><span class="n">algorithm</span><span class="o">).</span><span
+                                    class="na">withIssuer</span><span class="o">(</span><span class="s">&quot;WEBSOCKET-SERVER&quot;</span><span
+                                    class="o">).</span><span class="na">build</span><span class="o">();</span>
+        <span class="k">return</span> <span class="n">verifier</span><span class="o">.</span><span
+                                    class="na">verify</span><span class="o">(</span><span class="n">token</span><span
+                                    class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Load the JWT secret used to sign token using a byte array for secret storage in order to avoid persistent string in memory</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return The secret as byte array</span>
+<span class="cm">     * @throws IOException If any error occur during the secret loading</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">byte</span><span class="o">[]</span> <span
+                                    class="nf">loadSecret</span><span class="o">()</span> <span class="kd">throws</span> <span
+                                    class="n">IOException</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">Files</span><span class="o">.</span><span
+                                    class="na">readAllBytes</span><span class="o">(</span><span
+                                    class="n">Paths</span><span class="o">.</span><span class="na">get</span><span
+                                    class="o">(</span><span class="s">&quot;src&quot;</span><span
+                                    class="o">,</span> <span class="s">&quot;main&quot;</span><span
+                                    class="o">,</span> <span class="s">&quot;resources&quot;</span><span
+                                    class="o">,</span> <span class="s">&quot;jwt-secret.txt&quot;</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+                        </div>
+                        <p><br/>
+                            <b>JSON schema of the input and output authentication message</b> - Define the expected
+                            structure of the input and output messages from the authentication endpoint point of view
+                        </p>
+                        <pre>
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title": "AuthenticationRequest",
+  "type": "object",
+  "properties": {
+    "login": {
+      "type": "string",
+      "pattern": "^[a-zA-Z]{1,10}$"
+    },
+    "password": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "login",
+    "password"
+  ]
+}
+</pre>
+                        <pre>
+{
+"$schema": "http://json-schema.org/schema#",
+"title": "AuthenticationResponse",
+"type": "object",
+"properties": {
+  "isSuccess;": {
+    "type": "boolean"
+  },
+  "token": {
+    "type": "string",
+    "pattern": "^[a-zA-Z0-9+/=\\._-]{0,500}$"
+  },
+  "message": {
+    "type": "string",
+    "pattern": "^[a-zA-Z0-9!\\s]{0,100}$"
+  }
+},
+"required": [
+  "isSuccess",
+  "token",
+  "message"
+]
+}
+</pre>
+                        <p><br/>
+                            <b>Authentication message decoder and encoder</b> - Perform the JSON
+                            serialization/deserialization and the input/output validation using dedicated JSON Schema.
+                            It allow to systematically ensure that all messages received and sent by the endpoint
+                            strictly respect the expected structure and content.
+                        </p>
+                        <div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="kn">import</span> <span
+                                class="nn">com.fasterxml.jackson.databind.JsonNode</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.github.fge.jackson.JsonLoader</span><span class="o">;</span>
+<span class="kn">import</span> <span
+                                    class="nn">com.github.fge.jsonschema.core.exceptions.ProcessingException</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.github.fge.jsonschema.core.report.ProcessingReport</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.github.fge.jsonschema.main.JsonSchema</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.github.fge.jsonschema.main.JsonSchemaFactory</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.google.gson.Gson</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.vo.AuthenticationRequest</span><span
+                                    class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.websocket.DecodeException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.Decoder</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.EndpointConfig</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Decode JSON text representation to an AuthenticationRequest object</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * As there one instance of the decoder class by endpoint session so we can use the JsonSchema as decoder instance variable.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AuthenticationRequestDecoder</span> <span
+                                    class="kd">implements</span> <span class="n">Decoder</span><span
+                                    class="o">.</span><span class="na">Text</span><span class="o">&lt;</span><span
+                                    class="n">AuthenticationRequest</span><span class="o">&gt;</span> <span
+                                    class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * JSON validation schema associated to this type of message</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">JsonSchema</span> <span class="n">validationSchema</span> <span
+                                    class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Initialize decoder and associated JSON validation schema</span>
+<span class="cm">     *</span>
+<span class="cm">     * @throws IOException If any error occur during the object creation</span>
+<span class="cm">     * @throws ProcessingException If any error occur during the schema loading</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">AuthenticationRequestDecoder</span><span class="o">()</span> <span
+                                    class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span
+                                    class="n">ProcessingException</span> <span class="o">{</span>
+        <span class="n">JsonNode</span> <span class="n">node</span> <span class="o">=</span> <span
+                                    class="n">JsonLoader</span><span class="o">.</span><span
+                                    class="na">fromFile</span><span class="o">(</span><span class="k">new</span> <span
+                                    class="n">File</span><span class="o">(</span><span class="s">&quot;src/main/resources/authentication-request-schema.json&quot;</span><span
+                                    class="o">));</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">validationSchema</span> <span
+                                    class="o">=</span> <span class="n">JsonSchemaFactory</span><span
+                                    class="o">.</span><span class="na">byDefault</span><span class="o">().</span><span
+                                    class="na">getJsonSchema</span><span class="o">(</span><span
+                                    class="n">node</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * {@inheritDoc}</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">AuthenticationRequest</span> <span class="nf">decode</span><span
+                                    class="o">(</span><span class="n">String</span> <span class="n">s</span><span
+                                    class="o">)</span> <span class="kd">throws</span> <span
+                                    class="n">DecodeException</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="c1">//Validate the provided representation against the dedicated schema</span>
+            <span class="c1">//Use validation mode with report in order to enable further inspection/tracing of the error details</span>
+            <span class="c1">//Moreover the validation method &quot;validInstance()&quot; generate a NullPointerException if the representation do not respect the expected schema</span>
+            <span class="c1">//so it&#39;s more proper to use the validation method with report</span>
+            <span class="n">ProcessingReport</span> <span class="n">validationReport</span> <span
+                                    class="o">=</span> <span class="k">this</span><span class="o">.</span><span
+                                    class="na">validationSchema</span><span class="o">.</span><span
+                                    class="na">validate</span><span class="o">(</span><span
+                                    class="n">JsonLoader</span><span class="o">.</span><span
+                                    class="na">fromString</span><span class="o">(</span><span class="n">s</span><span
+                                    class="o">),</span> <span class="kc">true</span><span class="o">);</span>
+            <span class="c1">//Ensure there no error</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">validationReport</span><span
+                                    class="o">.</span><span class="na">isSuccess</span><span class="o">())</span> <span
+                                    class="o">{</span>
+                <span class="c1">//Simply reject the message here: Don&#39;t care about error details...</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">DecodeException</span><span
+                                    class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="s">&quot;Validation of the provided representation failed !&quot;</span><span
+                                    class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span
+                                    class="o">|</span> <span class="n">ProcessingException</span> <span
+                                    class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">DecodeException</span><span
+                                    class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="s">&quot;Cannot validate the provided representation to a JSON valid representation !&quot;</span><span
+                                    class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Gson</span><span
+                                    class="o">().</span><span class="na">fromJson</span><span class="o">(</span><span
+                                    class="n">s</span><span class="o">,</span> <span
+                                    class="n">AuthenticationRequest</span><span class="o">.</span><span
+                                    class="na">class</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * {@inheritDoc}</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">willDecode</span><span
+                                    class="o">(</span><span class="n">String</span> <span class="n">s</span><span
+                                    class="o">)</span> <span class="o">{</span>
+        <span class="kt">boolean</span> <span class="n">canDecode</span> <span class="o">=</span> <span
+                                    class="kc">false</span><span class="o">;</span>
+
+        <span class="c1">//If the provided JSON representation is empty/null then we indicate that representation cannot be decoded to our expected object</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">s</span> <span class="o">==</span> <span
+                                    class="kc">null</span> <span class="o">||</span> <span class="n">s</span><span
+                                    class="o">.</span><span class="na">trim</span><span class="o">().</span><span
+                                    class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">canDecode</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="c1">//Try to cast the provided JSON representation to our object to validate at least the structure (content validation is done during decoding)</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">AuthenticationRequest</span> <span class="n">test</span> <span class="o">=</span> <span
+                                    class="k">new</span> <span class="n">Gson</span><span class="o">().</span><span
+                                    class="na">fromJson</span><span class="o">(</span><span class="n">s</span><span
+                                    class="o">,</span> <span class="n">AuthenticationRequest</span><span
+                                    class="o">.</span><span class="na">class</span><span class="o">);</span>
+            <span class="n">canDecode</span> <span class="o">=</span> <span class="o">(</span><span
+                                    class="n">test</span> <span class="o">!=</span> <span class="kc">null</span><span
+                                    class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span
+                                    class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span
+                                    class="o">{</span>
+            <span class="c1">//Ignore explicitly any casting error...</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">canDecode</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * {@inheritDoc}</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span
+                                    class="o">(</span><span class="n">EndpointConfig</span> <span
+                                    class="n">config</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//Not used</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * {@inheritDoc}</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">destroy</span><span class="o">()</span> <span
+                                    class="o">{</span>
+        <span class="c1">//Not used</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+                        </div>
+                        <div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="kn">import</span> <span
+                                class="nn">com.fasterxml.jackson.databind.JsonNode</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.github.fge.jackson.JsonLoader</span><span class="o">;</span>
+<span class="kn">import</span> <span
+                                    class="nn">com.github.fge.jsonschema.core.exceptions.ProcessingException</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.github.fge.jsonschema.core.report.ProcessingReport</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.github.fge.jsonschema.main.JsonSchema</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.github.fge.jsonschema.main.JsonSchemaFactory</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.google.gson.Gson</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.vo.AuthenticationResponse</span><span
+                                    class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.websocket.EncodeException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.Encoder</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.EndpointConfig</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Encode AuthenticationResponse object to JSON text representation.</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * As there one instance of the encoder class by endpoint session so we can use the JsonSchema as encoder instance variable.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AuthenticationResponseEncoder</span> <span
+                                    class="kd">implements</span> <span class="n">Encoder</span><span
+                                    class="o">.</span><span class="na">Text</span><span class="o">&lt;</span><span
+                                    class="n">AuthenticationResponse</span><span class="o">&gt;</span> <span
+                                    class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * JSON validation schema associated to this type of message</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">JsonSchema</span> <span class="n">validationSchema</span> <span
+                                    class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Initialize encoder and associated JSON validation schema</span>
+<span class="cm">     *</span>
+<span class="cm">     * @throws IOException If any error occur during the object creation</span>
+<span class="cm">     * @throws ProcessingException If any error occur during the schema loading</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">AuthenticationResponseEncoder</span><span class="o">()</span> <span
+                                    class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span
+                                    class="n">ProcessingException</span> <span class="o">{</span>
+        <span class="n">JsonNode</span> <span class="n">node</span> <span class="o">=</span> <span
+                                    class="n">JsonLoader</span><span class="o">.</span><span
+                                    class="na">fromFile</span><span class="o">(</span><span class="k">new</span> <span
+                                    class="n">File</span><span class="o">(</span><span class="s">&quot;src/main/resources/authentication-response-schema.json&quot;</span><span
+                                    class="o">));</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">validationSchema</span> <span
+                                    class="o">=</span> <span class="n">JsonSchemaFactory</span><span
+                                    class="o">.</span><span class="na">byDefault</span><span class="o">().</span><span
+                                    class="na">getJsonSchema</span><span class="o">(</span><span
+                                    class="n">node</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * {@inheritDoc}</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">encode</span><span
+                                    class="o">(</span><span class="n">AuthenticationResponse</span> <span class="n">object</span><span
+                                    class="o">)</span> <span class="kd">throws</span> <span
+                                    class="n">EncodeException</span> <span class="o">{</span>
+        <span class="c1">//Generate the JSON representation</span>
+        <span class="n">String</span> <span class="n">json</span> <span class="o">=</span> <span
+                                    class="k">new</span> <span class="n">Gson</span><span class="o">().</span><span
+                                    class="na">toJson</span><span class="o">(</span><span class="n">object</span><span
+                                    class="o">);</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="c1">//Validate the generated representation against the dedicated schema</span>
+            <span class="c1">//Use validation mode with report in order to enable further inspection/tracing of the error details</span>
+            <span class="c1">//Moreover the validation method &quot;validInstance()&quot; generate a NullPointerException if the representation do not respect the expected schema</span>
+            <span class="c1">//so it&#39;s more proper to use the validation method with report</span>
+            <span class="n">ProcessingReport</span> <span class="n">validationReport</span> <span
+                                    class="o">=</span> <span class="k">this</span><span class="o">.</span><span
+                                    class="na">validationSchema</span><span class="o">.</span><span
+                                    class="na">validate</span><span class="o">(</span><span
+                                    class="n">JsonLoader</span><span class="o">.</span><span
+                                    class="na">fromString</span><span class="o">(</span><span class="n">json</span><span
+                                    class="o">),</span> <span class="kc">true</span><span class="o">);</span>
+            <span class="c1">//Ensure there no error</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">validationReport</span><span
+                                    class="o">.</span><span class="na">isSuccess</span><span class="o">())</span> <span
+                                    class="o">{</span>
+                <span class="c1">//Simply reject the message here: Don&#39;t care about error details...</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">EncodeException</span><span
+                                    class="o">(</span><span class="n">object</span><span class="o">,</span> <span
+                                    class="s">&quot;Validation of the generated representation failed !&quot;</span><span
+                                    class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span
+                                    class="o">|</span> <span class="n">ProcessingException</span> <span
+                                    class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">EncodeException</span><span
+                                    class="o">(</span><span class="n">object</span><span class="o">,</span> <span
+                                    class="s">&quot;Cannot validate the generated representation to a JSON valid representation !&quot;</span><span
+                                    class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">json</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * {@inheritDoc}</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span
+                                    class="o">(</span><span class="n">EndpointConfig</span> <span
+                                    class="n">config</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//Not used</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * {@inheritDoc}</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">destroy</span><span class="o">()</span> <span
+                                    class="o">{</span>
+        <span class="c1">//Not used</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre>
+                        </div>
+                        <p>Note that the same approach is used in the messages handling part of the POC. All messages
+                            exchanged between the client and the server are systematically validated using the same way,
+                            using dedicated JSON schemas linked to messages dedicated Encoder/Decoder
+                            (serialization/deserialization).
+                        </p>
+                        <h2><span class="mw-headline" id="Authorization_and_access_token_explicit_invalidation">Authorization and access token explicit invalidation</span>
+                        </h2>
+                        <p>Authorization information is stored in the access token using the JWT <i>Claim</i> feature
+                            (in the POC the name of the claim is <i>access_level</i>). Authorization is validated when a
+                            request is received and before any other action using the user input information.
+                        </p>
+                        <p>The access token is passed with every message sent to the message endpoint and a blacklist is
+                            used in order to allow the user to request an explicit token invalidation. Explicit token
+                            invalidation is interesting from a user point of view because, often when token are used,
+                            the validity timeframe of the token is relatively long (it's common to see a valid timeframe
+                            superior to 1 hour) so it's important to allow a user to have a way to indicate to the
+                            system "OK, i have finished my exchange with you so you can close our exchange session and
+                            cleanup associated links". It's help also a user to revoke itself is current access if a
+                            malicious concurrent access is detected using the same token (case of token stealing).
+                        </p>
+                        <p><b>Token blacklist</b> - Maintain a temporary list using memory and time limited Caching of
+                            hashes of token that are not allowed to be used anymore
+                        </p>
+                        <div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="kn">import</span> <span
+                                class="nn">org.apache.commons.jcs.JCS</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.commons.jcs.access.CacheAccess</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.commons.jcs.access.exception.CacheException</span><span
+                                    class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.xml.bind.DatatypeConverter</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.security.MessageDigest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.security.NoSuchAlgorithmException</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Utility class to manage the access token that have been declared as no more usable (explicit user logout)</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AccessTokenBlacklistUtils</span> <span
+                                    class="o">{</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Message content send by user that indicate that the access token that come along the message must be blacklisted for further usage</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span
+                                    class="n">String</span> <span
+                                    class="n">MESSAGE_ACCESS_TOKEN_INVALIDATION_FLAG</span> <span
+                                    class="o">=</span> <span class="s">&quot;INVALIDATE_TOKEN&quot;</span><span
+                                    class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Use cache to store blacklisted token hash in order to avoid memory exhaustion and be consistent because token are valid 30 minutes so the item live in cache 60 minutes</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">CacheAccess</span><span
+                                    class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span
+                                    class="n">String</span><span class="o">&gt;</span> <span
+                                    class="n">TOKEN_CACHE</span><span class="o">;</span>
+
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">TOKEN_CACHE</span> <span class="o">=</span> <span class="n">JCS</span><span
+                                    class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span
+                                    class="s">&quot;default&quot;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span
+                                    class="n">CacheException</span> <span class="n">e</span><span
+                                    class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span
+                                    class="o">(</span><span class="s">&quot;Cannot init token cache !&quot;</span><span
+                                    class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Add token into the blacklist</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param token Token for which the hash must be added</span>
+<span class="cm">     * @throws NoSuchAlgorithmException If SHA256 is not available</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span
+                                    class="nf">addToken</span><span class="o">(</span><span
+                                    class="n">String</span> <span class="n">token</span><span class="o">)</span> <span
+                                    class="kd">throws</span> <span class="n">NoSuchAlgorithmException</span> <span
+                                    class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">token</span> <span class="o">!=</span> <span
+                                    class="kc">null</span> <span class="o">&amp;&amp;</span> <span
+                                    class="o">!</span><span class="n">token</span><span class="o">.</span><span
+                                    class="na">trim</span><span class="o">().</span><span class="na">isEmpty</span><span
+                                    class="o">())</span> <span class="o">{</span>
+            <span class="n">String</span> <span class="n">hashHex</span> <span class="o">=</span> <span class="n">computeHash</span><span
+                                    class="o">(</span><span class="n">token</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">TOKEN_CACHE</span><span class="o">.</span><span
+                                    class="na">get</span><span class="o">(</span><span class="n">hashHex</span><span
+                                    class="o">)</span> <span class="o">==</span> <span class="kc">null</span><span
+                                    class="o">)</span> <span class="o">{</span>
+                <span class="n">TOKEN_CACHE</span><span class="o">.</span><span class="na">putSafe</span><span
+                                    class="o">(</span><span class="n">hashHex</span><span class="o">,</span> <span
+                                    class="n">hashHex</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Check if a token is present in the blacklist</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param token Token for which the presence of the hash must be verified</span>
+<span class="cm">     * @return TRUE if token is blacklisted</span>
+<span class="cm">     * @throws NoSuchAlgorithmException If SHA256 is not available</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isBlacklisted</span><span
+                                    class="o">(</span><span class="n">String</span> <span class="n">token</span><span
+                                    class="o">)</span> <span class="kd">throws</span> <span class="n">NoSuchAlgorithmException</span> <span
+                                    class="o">{</span>
+        <span class="kt">boolean</span> <span class="n">exists</span> <span class="o">=</span> <span
+                                    class="kc">false</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">token</span> <span class="o">!=</span> <span
+                                    class="kc">null</span> <span class="o">&amp;&amp;</span> <span
+                                    class="o">!</span><span class="n">token</span><span class="o">.</span><span
+                                    class="na">trim</span><span class="o">().</span><span class="na">isEmpty</span><span
+                                    class="o">())</span> <span class="o">{</span>
+            <span class="n">String</span> <span class="n">hashHex</span> <span class="o">=</span> <span class="n">computeHash</span><span
+                                    class="o">(</span><span class="n">token</span><span class="o">);</span>
+            <span class="n">exists</span> <span class="o">=</span> <span class="o">(</span><span
+                                    class="n">TOKEN_CACHE</span><span class="o">.</span><span class="na">get</span><span
+                                    class="o">(</span><span class="n">hashHex</span><span class="o">)</span> <span
+                                    class="o">!=</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">exists</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Compute the SHA256 hash of a token</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param token Token for which the hash must be computed</span>
+<span class="cm">     * @return The hash encoded in HEX</span>
+<span class="cm">     * @throws NoSuchAlgorithmException If SHA256 is not available</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">computeHash</span><span
+                                    class="o">(</span><span class="n">String</span> <span class="n">token</span><span
+                                    class="o">)</span> <span class="kd">throws</span> <span class="n">NoSuchAlgorithmException</span> <span
+                                    class="o">{</span>
+        <span class="n">String</span> <span class="n">hashHex</span> <span class="o">=</span> <span
+                                    class="kc">null</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">token</span> <span class="o">!=</span> <span
+                                    class="kc">null</span> <span class="o">&amp;&amp;</span> <span
+                                    class="o">!</span><span class="n">token</span><span class="o">.</span><span
+                                    class="na">trim</span><span class="o">().</span><span class="na">isEmpty</span><span
+                                    class="o">())</span> <span class="o">{</span>
+            <span class="n">MessageDigest</span> <span class="n">md</span> <span class="o">=</span> <span class="n">MessageDigest</span><span
+                                    class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span
+                                    class="s">&quot;SHA-256&quot;</span><span class="o">);</span>
+            <span class="kt">byte</span><span class="o">[]</span> <span class="n">hash</span> <span
+                                    class="o">=</span> <span class="n">md</span><span class="o">.</span><span
+                                    class="na">digest</span><span class="o">(</span><span class="n">token</span><span
+                                    class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
+            <span class="n">hashHex</span> <span class="o">=</span> <span class="n">DatatypeConverter</span><span
+                                    class="o">.</span><span class="na">printHexBinary</span><span
+                                    class="o">(</span><span class="n">hash</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">hashHex</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre>
+                        </div>
+                        <p><b>Message handling</b> - Process a request from a user to add a message in the list. Show a
+                            authorization validation approach example
+                        </p>
+                        <div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="kn">import</span> <span
+                                class="nn">com.auth0.jwt.interfaces.Claim</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.auth0.jwt.interfaces.DecodedJWT</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.enumeration.AccessLevel</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.util.AccessTokenBlacklistUtils</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.util.AuthenticationUtils</span><span
+                                    class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.util.MessageUtils</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.vo.MessageRequest</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.owasp.pocwebsocket.vo.MessageResponse</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.Logger</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.slf4j.LoggerFactory</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.websocket.EncodeException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.RemoteEndpoint</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Handle message flow</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MessageHandler</span> <span class="kd">implements</span> <span
+                                    class="n">javax</span><span class="o">.</span><span class="na">websocket</span><span
+                                    class="o">.</span><span class="na">MessageHandler</span><span
+                                    class="o">.</span><span class="na">Whole</span><span class="o">&lt;</span><span
+                                    class="n">MessageRequest</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span
+                                    class="n">Logger</span> <span class="n">LOG</span> <span class="o">=</span> <span
+                                    class="n">LoggerFactory</span><span class="o">.</span><span
+                                    class="na">getLogger</span><span class="o">(</span><span
+                                    class="n">MessageHandler</span><span class="o">.</span><span class="na">class</span><span
+                                    class="o">);</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Reference to the communication channel with the client</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">RemoteEndpoint</span><span class="o">.</span><span
+                                    class="na">Basic</span> <span class="n">clientConnection</span><span
+                                    class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Constructor</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param clientConnection Reference to the communication channel with the client</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="nf">MessageHandler</span><span class="o">(</span><span class="n">RemoteEndpoint</span><span
+                                    class="o">.</span><span class="na">Basic</span> <span
+                                    class="n">clientConnection</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">clientConnection</span> <span
+                                    class="o">=</span> <span class="n">clientConnection</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * {@inheritDoc}</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onMessage</span><span
+                                    class="o">(</span><span class="n">MessageRequest</span> <span
+                                    class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">MessageResponse</span> <span class="n">response</span> <span class="o">=</span> <span
+                                    class="kc">null</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="cm">/*Step 1: Verify the token*/</span>
+            <span class="n">String</span> <span class="n">token</span> <span class="o">=</span> <span
+                                    class="n">message</span><span class="o">.</span><span
+                                    class="na">getToken</span><span class="o">();</span>
+            <span class="c1">//Verify if is it in the blacklist</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">AccessTokenBlacklistUtils</span><span
+                                    class="o">.</span><span class="na">isBlacklisted</span><span class="o">(</span><span
+                                    class="n">token</span><span class="o">))</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span
+                                    class="n">IllegalAccessException</span><span class="o">(</span><span class="s">&quot;Token is in the blacklist !&quot;</span><span
+                                    class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="c1">//Verify the signature of the token</span>
+            <span class="n">DecodedJWT</span> <span class="n">decodedToken</span> <span class="o">=</span> <span
+                                    class="n">AuthenticationUtils</span><span class="o">.</span><span class="na">validateToken</span><span
+                                    class="o">(</span><span class="n">token</span><span class="o">);</span>
+
+            <span class="cm">/*Step 2: Verify the authorization (access level)*/</span>
+            <span class="n">Claim</span> <span class="n">accessLevel</span> <span class="o">=</span> <span class="n">decodedToken</span><span
+                                    class="o">.</span><span class="na">getClaim</span><span class="o">(</span><span
+                                    class="s">&quot;access_level&quot;</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">accessLevel</span> <span
+                                    class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span
+                                    class="n">AccessLevel</span><span class="o">.</span><span
+                                    class="na">valueOf</span><span class="o">(</span><span
+                                    class="n">accessLevel</span><span class="o">.</span><span class="na">asString</span><span
+                                    class="o">())</span> <span class="o">==</span> <span class="kc">null</span><span
+                                    class="o">)</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span
+                                    class="n">IllegalAccessException</span><span class="o">(</span><span class="s">&quot;Token have an invalid access level claim !&quot;</span><span
+                                    class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="cm">/*Step 3: Do the expected processing*/</span>
+            <span class="c1">//Init the list of the messages for the current user</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">MessageUtils</span><span
+                                    class="o">.</span><span class="na">MESSAGES_DB</span><span class="o">.</span><span
+                                    class="na">containsKey</span><span class="o">(</span><span
+                                    class="n">decodedToken</span><span class="o">.</span><span
+                                    class="na">getSubject</span><span class="o">()))</span> <span class="o">{</span>
+                <span class="n">MessageUtils</span><span class="o">.</span><span class="na">MESSAGES_DB</span><span
+                                    class="o">.</span><span class="na">put</span><span class="o">(</span><span
+                                    class="n">decodedToken</span><span class="o">.</span><span
+                                    class="na">getSubject</span><span class="o">(),</span> <span
+                                    class="k">new</span> <span class="n">ArrayList</span><span
+                                    class="o">&lt;&gt;());</span>
+            <span class="o">}</span>
+
+            <span class="c1">//Add message to the list of message of the user if the message is a not a token invalidation order otherwise add the token to the blacklist</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">AccessTokenBlacklistUtils</span><span
+                                    class="o">.</span><span
+                                    class="na">MESSAGE_ACCESS_TOKEN_INVALIDATION_FLAG</span><span
+                                    class="o">.</span><span class="na">equalsIgnoreCase</span><span
+                                    class="o">(</span><span class="n">message</span><span class="o">.</span><span
+                                    class="na">getContent</span><span class="o">().</span><span
+                                    class="na">trim</span><span class="o">()))</span> <span class="o">{</span>
+                <span class="n">AccessTokenBlacklistUtils</span><span class="o">.</span><span class="na">addToken</span><span
+                                    class="o">(</span><span class="n">message</span><span class="o">.</span><span
+                                    class="na">getToken</span><span class="o">());</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">MessageUtils</span><span class="o">.</span><span class="na">MESSAGES_DB</span><span
+                                    class="o">.</span><span class="na">get</span><span class="o">(</span><span
+                                    class="n">decodedToken</span><span class="o">.</span><span
+                                    class="na">getSubject</span><span class="o">()).</span><span
+                                    class="na">add</span><span class="o">(</span><span class="n">message</span><span
+                                    class="o">.</span><span class="na">getContent</span><span class="o">());</span>
+            <span class="o">}</span>
+
+            <span class="c1">//According to the access level of user either return only is message or return all message</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span
+                                    class="o">&gt;</span> <span class="n">messages</span> <span class="o">=</span> <span
+                                    class="k">new</span> <span class="n">ArrayList</span><span
+                                    class="o">&lt;&gt;();</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">accessLevel</span><span class="o">.</span><span
+                                    class="na">asString</span><span class="o">().</span><span
+                                    class="na">equals</span><span class="o">(</span><span
+                                    class="n">AccessLevel</span><span class="o">.</span><span
+                                    class="na">USER</span><span class="o">.</span><span class="na">name</span><span
+                                    class="o">()))</span> <span class="o">{</span>
+                <span class="n">MessageUtils</span><span class="o">.</span><span class="na">MESSAGES_DB</span><span
+                                    class="o">.</span><span class="na">get</span><span class="o">(</span><span
+                                    class="n">decodedToken</span><span class="o">.</span><span
+                                    class="na">getSubject</span><span class="o">()).</span><span
+                                    class="na">forEach</span><span class="o">(</span><span class="n">s</span> <span
+                                    class="o">-&gt;</span> <span class="n">messages</span><span class="o">.</span><span
+                                    class="na">add</span><span class="o">(</span><span class="n">String</span><span
+                                    class="o">.</span><span class="na">format</span><span class="o">(</span><span
+                                    class="s">&quot;(%s): %s&quot;</span><span class="o">,</span> <span class="n">decodedToken</span><span
+                                    class="o">.</span><span class="na">getSubject</span><span class="o">(),</span> <span
+                                    class="n">s</span><span class="o">)));</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span
+                                    class="n">accessLevel</span><span class="o">.</span><span class="na">asString</span><span
+                                    class="o">().</span><span class="na">equals</span><span class="o">(</span><span
+                                    class="n">AccessLevel</span><span class="o">.</span><span
+                                    class="na">ADMIN</span><span class="o">.</span><span class="na">name</span><span
+                                    class="o">()))</span> <span class="o">{</span>
+                <span class="n">MessageUtils</span><span class="o">.</span><span class="na">MESSAGES_DB</span><span
+                                    class="o">.</span><span class="na">forEach</span><span class="o">((</span><span
+                                    class="n">k</span><span class="o">,</span> <span class="n">v</span><span
+                                    class="o">)</span> <span class="o">-&gt;</span> <span class="n">v</span><span
+                                    class="o">.</span><span class="na">forEach</span><span class="o">(</span><span
+                                    class="n">s</span> <span class="o">-&gt;</span> <span class="n">messages</span><span
+                                    class="o">.</span><span class="na">add</span><span class="o">(</span><span
+                                    class="n">String</span><span class="o">.</span><span class="na">format</span><span
+                                    class="o">(</span><span class="s">&quot;(%s): %s&quot;</span><span
+                                    class="o">,</span> <span class="n">k</span><span class="o">,</span> <span class="n">s</span><span
+                                    class="o">))));</span>
+            <span class="o">}</span>
+
+            <span class="c1">//Build the response object indicating that exchange succeed</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">AccessTokenBlacklistUtils</span><span
+                                    class="o">.</span><span
+                                    class="na">MESSAGE_ACCESS_TOKEN_INVALIDATION_FLAG</span><span
+                                    class="o">.</span><span class="na">equalsIgnoreCase</span><span
+                                    class="o">(</span><span class="n">message</span><span class="o">.</span><span
+                                    class="na">getContent</span><span class="o">().</span><span
+                                    class="na">trim</span><span class="o">()))</span> <span class="o">{</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MessageResponse</span><span
+                                    class="o">(</span><span class="kc">true</span><span class="o">,</span> <span
+                                    class="n">messages</span><span class="o">,</span> <span class="s">&quot;Token added to the blacklist&quot;</span><span
+                                    class="o">);</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MessageResponse</span><span
+                                    class="o">(</span><span class="kc">true</span><span class="o">,</span> <span
+                                    class="n">messages</span><span class="o">,</span> <span
+                                    class="s">&quot;&quot;</span><span class="o">);</span>
+            <span class="o">}</span>
+
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span
+                                    class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span
+                                    class="o">{</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span
+                                    class="s">&quot;[MessageHandler] Error occur in exchange process.&quot;</span><span
+                                    class="o">,</span> <span class="n">e</span><span class="o">);</span>
+            <span class="c1">//Build the response object indicating that exchange fail</span>
+            <span class="c1">//We send the error detail on client because ware are in POC (it will not the case in a real app)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MessageResponse</span><span
+                                    class="o">(</span><span class="kc">false</span><span class="o">,</span> <span
+                                    class="k">new</span> <span class="n">ArrayList</span><span
+                                    class="o">&lt;&gt;(),</span> <span class="s">&quot;Error occur during exchange: &quot;</span> <span
+                                    class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span
+                                    class="o">());</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="c1">//Send response</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">clientConnection</span><span
+                                    class="o">.</span><span class="na">sendObject</span><span class="o">(</span><span
+                                    class="n">response</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span
+                                    class="n">IOException</span> <span class="o">|</span> <span class="n">EncodeException</span> <span
+                                    class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">LOG</span><span class="o">.</span><span class="na">error</span><span
+                                    class="o">(</span><span class="s">&quot;[MessageHandler] Error occur in response object sending.&quot;</span><span
+                                    class="o">,</span> <span class="n">e</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+                        </div>
+                        <h2><span class="mw-headline"
+                                  id="Confidentiality_and_Integrity">Confidentiality and Integrity</span></h2>
+                        <p>If the raw version of the protocol is used (protocol <b>WS://</b>) then the transfered data
+                            are exposed to eavesdropping and potential on-the-fly alteration.
+                        </p>
+                        <p>Example of capture using Wireshark and searching for password exchanges in the stored PCAP
+                            file, not printable characters has been explicitly removed from the command result:
+                        </p>
+                        <div class="mw-highlight mw-content-ltr" dir="ltr"><pre>$ grep -aE <span class="s1">&#39;(password)&#39;</span> capture.pcap
+<span class="o">{</span><span class="s2">&quot;login&quot;</span>:<span class="s2">&quot;bob&quot;</span>,<span
+                                    class="s2">&quot;password&quot;</span>:<span
+                                    class="s2">&quot;bob123&quot;</span><span class="o">}</span>
+</pre>
+                        </div>
+                        <p>There is a way to check, at WebSocket endpoint level, if the channel is secure by calling the
+                            method <i>isSecure()</i> on the <i>session</i> object instance.
+                        </p>
+                        <p>Example of implementation in the method of the endpoint in charge of setup the session and
+                            affect the message handler:
+                        </p>
+                        <div class="mw-highlight mw-content-ltr" dir="ltr"><pre><span class="cm">/**</span>
+<span class="cm"> * Handle the beginning of an exchange</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param session Exchange session information</span>
+<span class="cm"> */</span>
+<span class="nd">@OnOpen</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">(</span><span
+                                    class="n">Session</span> <span class="n">session</span><span
+                                    class="o">)</span> <span class="o">{</span>
+    <span class="o">...</span>
+    <span class="c1">//Affect a new message handler instance in order to process the exchange only if the channel is secured</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">session</span><span class="o">.</span><span
+                                    class="na">isSecure</span><span class="o">())</span> <span class="o">{</span>
+        <span class="n">session</span><span class="o">.</span><span class="na">addMessageHandler</span><span
+                                    class="o">(</span><span class="k">new</span> <span class="n">AuthenticationMessageHandler</span><span
+                                    class="o">(</span><span class="n">session</span><span class="o">.</span><span
+                                    class="na">getBasicRemote</span><span class="o">()));</span>
+    <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span
+                                    class="s">&quot;[AuthenticationEndpoint] Session {} do not use a secure channel so no message handler was affected for processing and session was explicitly closed !&quot;</span><span
+                                    class="o">,</span> <span class="n">session</span><span class="o">.</span><span
+                                    class="na">getId</span><span class="o">());</span>
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">session</span><span class="o">.</span><span class="na">close</span><span
+                                    class="o">(</span><span class="k">new</span> <span class="n">CloseReason</span><span
+                                    class="o">(</span><span class="n">CloseReason</span><span class="o">.</span><span
+                                    class="na">CloseCodes</span><span class="o">.</span><span
+                                    class="na">CANNOT_ACCEPT</span><span class="o">,</span><span class="s">&quot;Insecure channel used !&quot;</span><span
+                                    class="o">));</span>
+        <span class="o">}</span><span class="k">catch</span><span class="o">(</span><span
+                                    class="n">IOException</span> <span class="n">e</span><span class="o">){</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span
+                                    class="s">&quot;[AuthenticationEndpoint] Session {} cannot be explicitly closed !&quot;</span><span
+                                    class="o">,</span> <span class="n">session</span><span class="o">.</span><span
+                                    class="na">getId</span><span class="o">(),</span> <span class="n">e</span><span
+                                    class="o">);</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+    <span class="n">LOG</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span
+                                    class="s">&quot;[AuthenticationEndpoint] Session {} message handler affected for processing&quot;</span><span
+                                    class="o">,</span> <span class="n">session</span><span class="o">.</span><span
+                                    class="na">getId</span><span class="o">());</span>
+<span class="o">}</span>
+</pre>
+                        </div>
+                        <p>Expose WebSocket endpoints only on <b><a rel="nofollow" class="external text"
+                                                                    href="https://kaazing.com/html5-websocket-security-is-strong/">WSS</a>://</b>
+                            protocol (WebSockets over SSL/TLS) in order to ensure <i>Confidentiality</i> and <i>Integrity</i>
+                            of the traffic like using HTTP over SSL/TLS to secure HTTP exchanges.
+                        </p>
+                        <h1><span class="mw-headline"
+                                  id="Authors_and_Primary_Editors">Authors and Primary Editors</span></h1>
+                        <table class="wikitable">
+                            <tr>
+                                <th> First</th>
+                                <th> Last</th>
+                                <th> Email
+                                </th>
+                            </tr>
+                            <tr>
+                                <td> Mark</td>
+                                <td> Roxberry</td>
+                                <td> mark.roxberry [at] owasp.org
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Krzysztof</td>
+                                <td> Kotowicz</td>
+                                <td> krzysztof [at] kotowicz.net
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Will</td>
+                                <td> Stranathan</td>
+                                <td> will [at] cltnc.us
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Shreeraj</td>
+                                <td> Shah</td>
+                                <td> shreeraj.shah [at] blueinfy.net
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Juan</td>
+                                <td> Galiana Lara</td>
+                                <td> jgaliana [at] owasp.org
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Dominique</td>
+                                <td> Righetto</td>
+                                <td> dominique.righetto [at] owasp.org
+                                </td>
+                            </tr>
+                        </table>
+                        <h1><span class="mw-headline" id="Other_Cheatsheets">Other Cheatsheets</span></h1>
+                        <table class="navigationBox mw-collapsible">
+
+                            <tr>
+                                <td colspan="2" class="header"><span class="left"><abbr
+                                        title="View this template"><strong class="selflink">V</strong></abbr> - <abbr
+                                        title="Discuss this template"><strong class="selflink">T</strong></abbr> - <abbr
+                                        title="Edit this template"></a><a rel="nofollow" class="external text"
+                                                                          href="https://www.owasp.org/index.php?title=HTML5_Security_Cheat_Sheet&amp;action=edit">E</a><abbr
+                                        title="Edit this template"></abbr></span> <b><a href="/index.php/Cheat_Sheets"
+                                                                                        title="Cheat Sheets"
+                                                                                        class="mw-redirect">Cheat
+                                    Sheets</a></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="category"><b>Developer / Builder</b>
+                                </td>
+                                <td class="links">
+                                    <ul>
+                                        <li><a href="/index.php/3rd_Party_Javascript_Management_Cheat_Sheet"
+                                               title="3rd Party Javascript Management Cheat Sheet">3rd Party Javascript
+                                            Management</a></li>
+                                        <li><a href="/index.php/Access_Control_Cheat_Sheet"
+                                               title="Access Control Cheat Sheet">Access Control</a></li>
+                                        <li><a href="/index.php/AJAX_Security_Cheat_Sheet"
+                                               title="AJAX Security Cheat Sheet">AJAX Security Cheat Sheet</a></li>
+                                        <li><a href="/index.php/Authentication_Cheat_Sheet"
+                                               title="Authentication Cheat Sheet">Authentication</a> (<a
+                                                href="/index.php/Authentication_Cheat_Sheet_Espa%C3%B1ol"
+                                                title="Authentication Cheat Sheet Español">ES</a>)
+                                        </li>
+                                        <li><a href="/index.php/Bean_Validation_Cheat_Sheet"
+                                               title="Bean Validation Cheat Sheet">Bean Validation Cheat Sheet</a></li>
+                                        <li><a href="/index.php/Choosing_and_Using_Security_Questions_Cheat_Sheet"
+                                               title="Choosing and Using Security Questions Cheat Sheet">Choosing and
+                                            Using Security Questions</a></li>
+                                        <li><a href="/index.php/Clickjacking_Defense_Cheat_Sheet"
+                                               title="Clickjacking Defense Cheat Sheet">Clickjacking Defense</a></li>
+                                        <li><a href="/index.php/Credential_Stuffing_Prevention_Cheat_Sheet"
+                                               title="Credential Stuffing Prevention Cheat Sheet">Credential Stuffing
+                                            Prevention Cheat Sheet</a></li>
+                                        <li>
+                                            <a href="/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet"
+                                               title="Cross-Site Request Forgery (CSRF) Prevention Cheat Sheet">Cross-Site
+                                                Request Forgery (CSRF) Prevention</a></li>
+                                        <li><a href="/index.php/Cryptographic_Storage_Cheat_Sheet"
+                                               title="Cryptographic Storage Cheat Sheet">Cryptographic Storage</a></li>
+                                        <li><a href="/index.php/C-Based_Toolchain_Hardening_Cheat_Sheet"
+                                               title="C-Based Toolchain Hardening Cheat Sheet">C-Based Toolchain
+                                            Hardening</a></li>
+                                        <li><a href="/index.php/Deserialization_Cheat_Sheet"
+                                               title="Deserialization Cheat Sheet">Deserialization</a></li>
+                                        <li><a href="/index.php/DOM_based_XSS_Prevention_Cheat_Sheet"
+                                               title="DOM based XSS Prevention Cheat Sheet">DOM based XSS Prevention</a>
+                                        </li>
+                                        <li><a href="/index.php/Forgot_Password_Cheat_Sheet"
+                                               title="Forgot Password Cheat Sheet">Forgot Password</a></li>
+                                        <li><strong class="selflink">HTML5 Security</strong></li>
+                                        <li><a href="/index.php/HTTP_Strict_Transport_Security_Cheat_Sheet"
+                                               title="HTTP Strict Transport Security Cheat Sheet">HTTP Strict Transport
+                                            Security</a></li>
+                                        <li><a href="/index.php/Injection_Prevention_Cheat_Sheet"
+                                               title="Injection Prevention Cheat Sheet">Injection Prevention Cheat
+                                            Sheet</a></li>
+                                        <li><a href="/index.php/Injection_Prevention_Cheat_Sheet_in_Java"
+                                               title="Injection Prevention Cheat Sheet in Java">Injection Prevention
+                                            Cheat Sheet in Java</a></li>
+                                        <li><a href="/index.php/JSON_Web_Token_(JWT)_Cheat_Sheet_for_Java"
+                                               title="JSON Web Token (JWT) Cheat Sheet for Java">JSON Web Token (JWT)
+                                            Cheat Sheet for Java</a></li>
+                                        <li><a href="/index.php/Input_Validation_Cheat_Sheet"
+                                               title="Input Validation Cheat Sheet">Input Validation</a></li>
+                                        <li><a href="/index.php/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet"
+                                               title="Insecure Direct Object Reference Prevention Cheat Sheet">Insecure
+                                            Direct Object Reference Prevention</a></li>
+                                        <li><a href="/index.php/JAAS_Cheat_Sheet" title="JAAS Cheat Sheet">JAAS</a></li>
+                                        <li><a href="/index.php/Key_Management_Cheat_Sheet"
+                                               title="Key Management Cheat Sheet">Key Management</a></li>
+                                        <li><a href="/index.php/LDAP_Injection_Prevention_Cheat_Sheet"
+                                               title="LDAP Injection Prevention Cheat Sheet">LDAP Injection
+                                            Prevention</a></li>
+                                        <li><a href="/index.php/Logging_Cheat_Sheet"
+                                               title="Logging Cheat Sheet">Logging</a></li>
+                                        <li><a href="/index.php/Mass_Assignment_Cheat_Sheet"
+                                               title="Mass Assignment Cheat Sheet">Mass Assignment Cheat Sheet</a></li>
+                                        <li><a href="/index.php/.NET_Security_Cheat_Sheet"
+                                               title=".NET Security Cheat Sheet">.NET Security</a></li>
+                                        <li><a href="/index.php/OS_Command_Injection_Defense_Cheat_Sheet"
+                                               title="OS Command Injection Defense Cheat Sheet">OS Command Injection
+                                            Defense Cheat Sheet</a></li>
+                                        <li><a href="/index.php/OWASP_Top_Ten_Cheat_Sheet"
+                                               title="OWASP Top Ten Cheat Sheet">OWASP Top Ten</a></li>
+                                        <li><a href="/index.php/Password_Storage_Cheat_Sheet"
+                                               title="Password Storage Cheat Sheet">Password Storage</a></li>
+                                        <li><a href="/index.php/Pinning_Cheat_Sheet"
+                                               title="Pinning Cheat Sheet">Pinning</a></li>
+                                        <li><a href="/index.php/Query_Parameterization_Cheat_Sheet"
+                                               title="Query Parameterization Cheat Sheet">Query Parameterization</a>
+                                        </li>
+                                        <li><a href="/index.php/REST_Security_Cheat_Sheet"
+                                               title="REST Security Cheat Sheet">REST Security</a></li>
+                                        <li><a href="/index.php/Ruby_on_Rails_Cheatsheet"
+                                               title="Ruby on Rails Cheatsheet">Ruby on Rails</a></li>
+                                        <li><a href="/index.php/Session_Management_Cheat_Sheet"
+                                               title="Session Management Cheat Sheet">Session Management</a></li>
+                                        <li><a href="/index.php/SAML_Security_Cheat_Sheet"
+                                               title="SAML Security Cheat Sheet">SAML Security</a></li>
+                                        <li><a href="/index.php/SQL_Injection_Prevention_Cheat_Sheet"
+                                               title="SQL Injection Prevention Cheat Sheet">SQL Injection Prevention</a>
+                                        </li>
+                                        <li><a href="/index.php/Transaction_Authorization_Cheat_Sheet"
+                                               title="Transaction Authorization Cheat Sheet">Transaction
+                                            Authorization</a></li>
+                                        <li><a href="/index.php/Transport_Layer_Protection_Cheat_Sheet"
+                                               title="Transport Layer Protection Cheat Sheet">Transport Layer
+                                            Protection</a></li>
+                                        <li><a href="/index.php/Unvalidated_Redirects_and_Forwards_Cheat_Sheet"
+                                               title="Unvalidated Redirects and Forwards Cheat Sheet">Unvalidated
+                                            Redirects and Forwards</a></li>
+                                        <li><a href="/index.php/User_Privacy_Protection_Cheat_Sheet"
+                                               title="User Privacy Protection Cheat Sheet">User Privacy Protection</a>
+                                        </li>
+                                        <li><a href="/index.php/Web_Service_Security_Cheat_Sheet"
+                                               title="Web Service Security Cheat Sheet">Web Service Security</a></li>
+                                        <li><a href="/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet"
+                                               title="XSS (Cross Site Scripting) Prevention Cheat Sheet">XSS (Cross Site
+                                            Scripting) Prevention</a></li>
+                                        <li><a href="/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet"
+                                               title="XML External Entity (XXE) Prevention Cheat Sheet">XML External
+                                            Entity (XXE) Prevention Cheat Sheet</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="category"><b>Assessment / Breaker</b>
+                                </td>
+                                <td class="links">
+                                    <ul>
+                                        <li><a href="/index.php/Attack_Surface_Analysis_Cheat_Sheet"
+                                               title="Attack Surface Analysis Cheat Sheet">Attack Surface Analysis</a>
+                                        </li>
+                                        <li><a href="/index.php/REST_Assessment_Cheat_Sheet"
+                                               title="REST Assessment Cheat Sheet">REST Assessment</a></li>
+                                        <li><a href="/index.php/Web_Application_Security_Testing_Cheat_Sheet"
+                                               title="Web Application Security Testing Cheat Sheet">Web Application
+                                            Security Testing</a></li>
+                                        <li><a href="/index.php/XML_Security_Cheat_Sheet"
+                                               title="XML Security Cheat Sheet">XML Security Cheat Sheet</a></li>
+                                        <li><a href="/index.php/XSS_Filter_Evasion_Cheat_Sheet"
+                                               title="XSS Filter Evasion Cheat Sheet">XSS Filter Evasion</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="category"><b>Mobile</b>
+                                </td>
+                                <td class="links">
+                                    <ul>
+                                        <li><a href="/index.php/Android_Testing_Cheat_Sheet"
+                                               title="Android Testing Cheat Sheet">Android Testing</a></li>
+                                        <li><a href="/index.php/IOS_Developer_Cheat_Sheet"
+                                               title="IOS Developer Cheat Sheet">IOS Developer</a></li>
+                                        <li><a href="/index.php/Mobile_Jailbreaking_Cheat_Sheet"
+                                               title="Mobile Jailbreaking Cheat Sheet">Mobile Jailbreaking</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="category"><b>OpSec / Defender</b>
+                                </td>
+                                <td class="links">
+                                    <ul>
+                                        <li><a href="/index.php/Virtual_Patching_Cheat_Sheet"
+                                               title="Virtual Patching Cheat Sheet">Virtual Patching</a></li>
+                                        <li><a href="/index.php/Vulnerability_Disclosure_Cheat_Sheet"
+                                               title="Vulnerability Disclosure Cheat Sheet">Vulnerability Disclosure</a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="category"><b>Draft and Beta</b>
+                                </td>
+                                <td class="links">
+                                    <ul>
+                                        <li><a href="/index.php/Application_Security_Architecture_Cheat_Sheet"
+                                               title="Application Security Architecture Cheat Sheet">Application
+                                            Security Architecture</a></li>
+                                        <li><a href="/index.php/Business_Logic_Security_Cheat_Sheet"
+                                               title="Business Logic Security Cheat Sheet">Business Logic Security</a>
+                                        </li>
+                                        <li><a href="/index.php/Content_Security_Policy_Cheat_Sheet"
+                                               title="Content Security Policy Cheat Sheet">Content Security Policy</a>
+                                        </li>
+                                        <li><a href="/index.php/Denial_of_Service_Cheat_Sheet"
+                                               title="Denial of Service Cheat Sheet">Denial of Service Cheat Sheet</a>
+                                        </li>
+                                        <li><a href="/index.php/Grails_Secure_Code_Review_Cheat_Sheet"
+                                               title="Grails Secure Code Review Cheat Sheet">Grails Secure Code
+                                            Review</a></li>
+                                        <li><a href="/index.php/IOS_Application_Security_Testing_Cheat_Sheet"
+                                               title="IOS Application Security Testing Cheat Sheet">IOS Application
+                                            Security Testing</a></li>
+                                        <li><a href="/index.php/PHP_Security_Cheat_Sheet"
+                                               title="PHP Security Cheat Sheet">PHP Security</a></li>
+                                        <li><a href="/index.php/Regular_Expression_Security_Cheatsheet"
+                                               title="Regular Expression Security Cheatsheet">Regular Expression
+                                            Security Cheatsheet</a></li>
+                                        <li><a href="/index.php/Secure_Coding_Cheat_Sheet"
+                                               title="Secure Coding Cheat Sheet">Secure Coding</a></li>
+                                        <li><a href="/index.php/Secure_SDLC_Cheat_Sheet"
+                                               title="Secure SDLC Cheat Sheet">Secure SDLC</a></li>
+                                        <li><a href="/index.php/Threat_Modeling_Cheat_Sheet"
+                                               title="Threat Modeling Cheat Sheet">Threat Modeling</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="neighbors"><a href="/index.php/Category:Cheatsheets"
+                                                                     title="Category:Cheatsheets">All Pages In This
+                                    Category</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <!--
+            NewPP limit report
+            Cached time: 20180406050403
+            Cache expiry: 86400
+            Dynamic content: false
+            CPU time usage: 0.080 seconds
+            Real time usage: 3.488 seconds
+            Preprocessor visited node count: 306/1000000
+            Preprocessor generated node count: 604/1000000
+            Post‐expand include size: 9370/2097152 bytes
+            Template argument size: 3992/2097152 bytes
+            Highest expansion depth: 4/40
+            Expensive parser function count: 0/100
+            -->
+
+            <!--
+            Transclusion expansion time report (%,ms,calls,template)
+            100.00% 3450.096      1 - -total
+              0.37%   12.839      1 - Template:Cheatsheet_Navigation_Body
+              0.08%    2.826      1 - Template:NavigationBoxBegin
+              0.08%    2.812      5 - Template:NavigationBoxRow
+              0.07%    2.293      1 - Template:TOC_hidden
+              0.06%    1.979      1 - Template:NavigationBoxEnd
+            -->
+
+            <!-- Saved in parser cache with key wiki:pcache:idhash:20378-0!*!0!!en!5!* and timestamp 20180406050400 and revision id 238076
+             -->
+        </div>
+        <div class="printfooter">
+            Retrieved from "<a dir="ltr"
+                               href="https://www.owasp.org/index.php?title=HTML5_Security_Cheat_Sheet&amp;oldid=238076">https://www.owasp.org/index.php?title=HTML5_Security_Cheat_Sheet&amp;oldid=238076</a>"
+        </div>
+        <div id="catlinks" class="catlinks" data-mw="interface">
+            <div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/index.php/Special:Categories"
+                                                                       title="Special:Categories">Category</a>:
+                <ul>
+                    <li><a href="/index.php/Category:Cheatsheets" title="Category:Cheatsheets">Cheatsheets</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="visualClear"></div>
+    </div>
+</div>
+<div id="mw-navigation">
+    <h2>Navigation menu</h2>
+
+    <div id="mw-head">
+        <div id="p-personal" role="navigation" class="" aria-labelledby="p-personal-label">
+            <h3 id="p-personal-label">Personal tools</h3>
+            <ul>
+                <li id="pt-login"><a href="/index.php?title=Special:UserLogin&amp;returnto=HTML5+Security+Cheat+Sheet"
+                                     title="You are encouraged to log in; however, it is not mandatory [o]"
+                                     accesskey="o">Log in</a></li>
+                <li id="pt-createaccount"><a href="/index.php/Special:RequestAccount"
+                                             title="You are encouraged to create an account and log in; however, it is not mandatory">Request
+                    account</a></li>
+            </ul>
+        </div>
+        <div id="left-navigation">
+            <div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
+                <h3 id="p-namespaces-label">Namespaces</h3>
+                <ul>
+                    <li id="ca-nstab-main" class="selected"><span><a href="/index.php/HTML5_Security_Cheat_Sheet"
+                                                                     title="View the content page [c]" accesskey="c">Page</a></span>
+                    </li>
+                    <li id="ca-talk"><span><a href="/index.php/Talk:HTML5_Security_Cheat_Sheet"
+                                              title="Discussion about the content page [t]" accesskey="t"
+                                              rel="discussion">Discussion</a></span></li>
+                </ul>
+            </div>
+            <div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
+                <h3 id="p-variants-label">
+                    <span>Variants</span><a href="#"></a>
+                </h3>
+
+                <div class="menu">
+                    <ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="right-navigation">
+            <div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
+                <h3 id="p-views-label">Views</h3>
+                <ul>
+                    <li id="ca-view" class="selected"><span><a
+                            href="/index.php/HTML5_Security_Cheat_Sheet">Read</a></span></li>
+                    <li id="ca-viewsource"><span><a href="/index.php?title=HTML5_Security_Cheat_Sheet&amp;action=edit"
+                                                    title="This page is protected.&#10;You can view its source [e]"
+                                                    accesskey="e">View source</a></span></li>
+                    <li id="ca-history" class="collapsible"><span><a
+                            href="/index.php?title=HTML5_Security_Cheat_Sheet&amp;action=history"
+                            title="Past revisions of this page [h]" accesskey="h">View history</a></span></li>
+                </ul>
+            </div>
+            <div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label">
+                <h3 id="p-cactions-label"><span>More</span><a href="#"></a></h3>
+
+                <div class="menu">
+                    <ul>
+                    </ul>
+                </div>
+            </div>
+            <div id="p-search" role="search">
+                <h3>
+                    <label for="searchInput">Search</label>
+                </h3>
+
+                <form action="/index.php" id="searchform">
+                    <div id="simpleSearch">
+                        <input type="search" name="search" placeholder="Search" title="Search OWASP [f]" accesskey="f"
+                               id="searchInput"/><input type="hidden" value="Special:Search" name="title"/><input
+                            type="submit" name="fulltext" value="Search" title="Search the pages for this text"
+                            id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/><input type="submit"
+                                                                                                      name="go"
+                                                                                                      value="Go"
+                                                                                                      title="Go to a page with this exact name if it exists"
+                                                                                                      id="searchButton"
+                                                                                                      class="searchButton"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="mw-panel">
+        <div id="p-logo" role="banner"><a class="mw-wiki-logo" href="/index.php/Main_Page"
+                                          title="Visit the main page"></a></div>
+        <div class="portal" role="navigation" id='p-Navigation' aria-labelledby='p-Navigation-label'>
+            <h3 id='p-Navigation-label'>Navigation</h3>
+
+            <div class="body">
+                <ul>
+                    <li id="n-Home"><a href="/index.php/Main_Page">Home</a></li>
+                    <li id="n-About-OWASP"><a
+                            href="https://www.owasp.org/index.php/About_The_Open_Web_Application_Security_Project"
+                            rel="nofollow">About OWASP</a></li>
+                    <li id="n-Acknowledgements"><a href="https://www.owasp.org/index.php/Acknowledgements"
+                                                   rel="nofollow">Acknowledgements</a></li>
+                    <li id="n-Advertising"><a href="https://www.owasp.org/index.php/Advertising" rel="nofollow">Advertising</a>
+                    </li>
+                    <li id="n-AppSec-Events"><a href="/index.php/Category:OWASP_AppSec_Conference">AppSec Events</a>
+                    </li>
+                    <li id="n-Books"><a href="http://stores.lulu.com/owasp" rel="nofollow">Books</a></li>
+                    <li id="n-Brand-Resources"><a href="https://www.owasp.org/index.php/Marketing/Resources"
+                                                  rel="nofollow">Brand Resources</a></li>
+                    <li id="n-Chapters"><a href="https://www.owasp.org/index.php/OWASP_Chapter"
+                                           rel="nofollow">Chapters</a></li>
+                    <li id="n-Donate-to-OWASP"><a href="https://www.owasp.org/index.php/Donate" rel="nofollow">Donate to
+                        OWASP</a></li>
+                    <li id="n-Downloads"><a href="/index.php/Category:OWASP_Download">Downloads</a></li>
+                    <li id="n-Funding"><a href="https://www.owasp.org/index.php/Funding" rel="nofollow">Funding</a></li>
+                    <li id="n-Governance"><a href="https://www.owasp.org/index.php/Governance"
+                                             rel="nofollow">Governance</a></li>
+                    <li id="n-Initiatives"><a
+                            href="https://www.owasp.org/index.php/OWASP_Initiatives_Global_Strategic_Focus"
+                            rel="nofollow">Initiatives</a></li>
+                    <li id="n-Mailing-Lists"><a href="http://lists.owasp.org/mailman/listinfo" rel="nofollow">Mailing
+                        Lists</a></li>
+                    <li id="n-Membership"><a href="/index.php/Membership">Membership</a></li>
+                    <li id="n-Merchandise"><a href="https://www.owasp.org/index.php/OWASP_Merchandise" rel="nofollow">Merchandise</a>
+                    </li>
+                    <li id="n-News"><a href="/index.php/Application_Security_News">News</a></li>
+                    <li id="n-Portal"><a href="https://www.owasp.org/index.php/Portal" rel="nofollow"
+                                         title="About the project, what you can do, where to find things">Community
+                        portal</a></li>
+                    <li id="n-Presentations"><a href="/index.php/Category:OWASP_Presentations">Presentations</a></li>
+                    <li id="n-Press"><a href="https://www.owasp.org/index.php/Press" rel="nofollow">Press</a></li>
+                    <li id="n-Projects"><a href="/index.php/Category:OWASP_Project">Projects</a></li>
+                    <li id="n-Video"><a href="/index.php/Category:OWASP_Video">Video</a></li>
+                    <li id="n-Volunteer"><a href="http://owasp.force.com/volunteers/GW_Volunteers__VolunteersJobListing"
+                                            rel="nofollow">Volunteer</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="portal" role="navigation" id='p-Reference' aria-labelledby='p-Reference-label'>
+            <h3 id='p-Reference-label'>Reference</h3>
+
+            <div class="body">
+                <ul>
+                    <li id="n-Activities"><a href="/index.php/Category:Activity">Activities</a></li>
+                    <li id="n-Attacks"><a href="/index.php/Category:Attack">Attacks</a></li>
+                    <li id="n-Code-Snippets"><a href="/index.php/Category:Code_Snippet">Code Snippets</a></li>
+                    <li id="n-Controls"><a href="/index.php/Category:Control">Controls</a></li>
+                    <li id="n-Glossary"><a href="/index.php/Category:Glossary">Glossary</a></li>
+                    <li id="n-How-To..."><a href="/index.php/Category:How_To">How To...</a></li>
+                    <li id="n-Java-Project"><a href="/index.php/Category:OWASP_Java_Project">Java Project</a></li>
+                    <li id="n-.NET-Project"><a href="/index.php/Category:OWASP_.NET_Project">.NET Project</a></li>
+                    <li id="n-Principles"><a href="/index.php/Category:Principle">Principles</a></li>
+                    <li id="n-Technologies"><a href="/index.php/Category:Technology">Technologies</a></li>
+                    <li id="n-Threat-Agents"><a href="/index.php/Category:Threat_Agent">Threat Agents</a></li>
+                    <li id="n-Vulnerabilities"><a href="/index.php/Category:Vulnerability">Vulnerabilities</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="portal" role="navigation" id='p-tb' aria-labelledby='p-tb-label'>
+            <h3 id='p-tb-label'>Tools</h3>
+
+            <div class="body">
+                <ul>
+                    <li id="t-whatlinkshere"><a href="/index.php/Special:WhatLinksHere/HTML5_Security_Cheat_Sheet"
+                                                title="A list of all wiki pages that link here [j]" accesskey="j">What
+                        links here</a></li>
+                    <li id="t-recentchangeslinked"><a
+                            href="/index.php/Special:RecentChangesLinked/HTML5_Security_Cheat_Sheet"
+                            title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a>
+                    </li>
+                    <li id="t-specialpages"><a href="/index.php/Special:SpecialPages"
+                                               title="A list of all special pages [q]" accesskey="q">Special pages</a>
+                    </li>
+                    <li id="t-print"><a href="/index.php?title=HTML5_Security_Cheat_Sheet&amp;printable=yes"
+                                        rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable
+                        version</a></li>
+                    <li id="t-permalink"><a href="/index.php?title=HTML5_Security_Cheat_Sheet&amp;oldid=238076"
+                                            title="Permanent link to this revision of the page">Permanent link</a></li>
+                    <li id="t-info"><a href="/index.php?title=HTML5_Security_Cheat_Sheet&amp;action=info"
+                                       title="More information about this page">Page information</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="footer" role="contentinfo">
+    <ul id="footer-info">
+        <li id="footer-info-lastmod"> This page was last modified on 25 February 2018, at 04:58.</li>
+        <li id="footer-info-copyright">Content is available under <a class="external" rel="nofollow"
+                                                                     href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike</a> unless otherwise noted.
+        </li>
+    </ul>
+    <ul id="footer-places">
+        <li id="footer-places-privacy"><a href="/index.php/OWASP:Privacy_policy" title="OWASP:Privacy policy">Privacy
+            policy</a></li>
+        <li id="footer-places-about"><a href="/index.php/OWASP:About" title="OWASP:About">About OWASP</a></li>
+        <li id="footer-places-disclaimer"><a href="/index.php/OWASP:General_disclaimer"
+                                             title="OWASP:General disclaimer">Disclaimers</a></li>
+    </ul>
+    <ul id="footer-icons" class="noprint">
+        <li id="footer-copyrightico">
+            <a href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/resources/assets/licenses/cc-by-sa.png"
+                                                                           alt="Creative Commons Attribution-ShareAlike"
+                                                                           width="88" height="31"/></a></li>
+        <li id="footer-poweredbyico">
+            <a href="//www.mediawiki.org/"><img src="/resources/assets/poweredby_mediawiki_88x31.png"
+                                                alt="Powered by MediaWiki"
+                                                srcset="/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /resources/assets/poweredby_mediawiki_176x62.png 2x"
+                                                width="88" height="31"/></a></li>
+    </ul>
+    <div style="clear:both"></div>
+</div>
+<script>(window.RLQ = window.RLQ || []).push(function () {
+    mw.loader.state({"user": "ready", "user.groups": "ready"});
+    mw.loader.load(["mediawiki.toc", "mediawiki.action.view.postEdit", "site", "mediawiki.user", "mediawiki.hidpi", "mediawiki.page.ready", "mediawiki.searchSuggest", "ext.headertabs", "ext.visualEditor.targetLoader"]);
+});</script>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-4531126-1', 'auto');
+    ga('set', 'anonymizeIp', true);
+    ga('send', 'pageview');
+
+</script>
+<script>(window.RLQ = window.RLQ || []).push(function () {
+    mw.config.set({"wgBackendResponseTime": 109});
+});</script>
+</body>
+</html>

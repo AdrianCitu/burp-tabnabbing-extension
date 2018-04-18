@@ -1,0 +1,56 @@
+@startuml
+legend top left
+Observer/Observable class diagram
+
+end legend
+
+package java.io {
+interface Closable {
+    void close();
+}
+}
+
+package com.github.adriancitu.burp.tabnabbing.parser {
+interface IByteReader {
+   public byte[] pull(int bytes)
+   public void attachListeners(List<IByteReaderObserver> listeners)
+}
+
+interface IByteReaderObserver {
+    void push(IByteReader reader, byte toHandle)
+    boolean problemFound()
+    Optional<TabNappingProblem>getProblem()
+}
+
+abstract class AbstractObserver
+class HTMLResponseReader {
+    Optional<String> getProblem()
+}
+
+
+
+
+
+Closable  <|-- IByteReader
+Closable  <|-- IByteReaderObserver
+
+
+IByteReaderObserver <|-- AbstractObserver
+
+AbstractObserver <|-- HTMLAnchorReaderObserver
+AbstractObserver <|-- JSWindowsOpenReaderObserver
+
+}
+
+package com.github.adriancitu.burp.tabnabbing.util {
+    class HtmlByteArrayUtility
+
+
+HTMLAnchorReaderObserver ... HtmlByteArrayUtility: uses
+JSWindowsOpenReaderObserver ... HtmlByteArrayUtility: uses
+
+IByteReader <|-- HTMLResponseReader
+
+IByteReader o-- "have list of" IByteReaderObserver
+}
+@enduml

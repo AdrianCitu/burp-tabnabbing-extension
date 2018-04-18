@@ -1,0 +1,39 @@
+@startuml
+autonumber
+actor BurpRuntime
+
+BurpRuntime --> "BurpExtender \n implements \n IBurpExtender" : registerExtenderCallbacks
+"BurpExtender \n implements \n IBurpExtender" -> "ScannerCheck \n implements \n IScannerCheck": new (IExtensionHelpers helpers)
+"BurpExtender \n implements \n IBurpExtender" <-- "ScannerCheck \n implements \n IScannerCheck": return new
+
+BurpRuntime -> "ScannerCheck \n implements \n IScannerCheck": List<IScanIssue> doPassiveScan()
+
+"ScannerCheck \n implements \n IScannerCheck" -> "HTMLResponseReader\nimplements\nIByteReader": createResponseReader()
+
+
+"HTMLResponseReader\nimplements\nIByteReader" -> "HTMLAnchorReaderObserver\nimplements\nIByteReaderObserver": new()
+"HTMLResponseReader\nimplements\nIByteReader" <-- "HTMLAnchorReaderObserver\nimplements\nIByteReaderObserver": return new
+
+"HTMLResponseReader\nimplements\nIByteReader" -> "JSWindowsOpenReaderObserver\nimplements\nIByteReaderObserver": new()
+"HTMLResponseReader\nimplements\nIByteReader" <-- "JSWindowsOpenReaderObserver\nimplements\nIByteReaderObserver": return new
+
+"HTMLResponseReader\nimplements\nIByteReader" --> "HTMLResponseReader\nimplements\nIByteReader": attachObservers
+"ScannerCheck \n implements \n IScannerCheck" <-- "HTMLResponseReader\nimplements\nIByteReader": return createResponseReader
+
+"ScannerCheck \n implements \n IScannerCheck" -> "HTMLResponseReader\nimplements\nIByteReader":Optional<TabNabbingProblem> getProblem()
+
+"HTMLResponseReader\nimplements\nIByteReader" ->"HTMLAnchorReaderObserver\nimplements\nIByteReaderObserver":Optional<TabNabbingProblem> getProblem()
+"HTMLResponseReader\nimplements\nIByteReader" <--"HTMLAnchorReaderObserver\nimplements\nIByteReaderObserver":return getProblem
+
+
+"HTMLResponseReader\nimplements\nIByteReader" ->"JSWindowsOpenReaderObserver\nimplements\nIByteReaderObserver":Optional<TabNabbingProblem> getProblem()
+"HTMLResponseReader\nimplements\nIByteReader" <--"JSWindowsOpenReaderObserver\nimplements\nIByteReaderObserver":return getProblem
+
+"ScannerCheck \n implements \n IScannerCheck" <-- "HTMLResponseReader\nimplements\nIByteReader":return getProblem
+
+"HTMLResponseReader\nimplements\nIByteReader" -> "HTMLResponseReader\nimplements\nIByteReader": create List<IScanIssue>
+
+BurpRuntime <-- "ScannerCheck \n implements \n IScannerCheck": return doPassiveScan
+
+
+@enduml
