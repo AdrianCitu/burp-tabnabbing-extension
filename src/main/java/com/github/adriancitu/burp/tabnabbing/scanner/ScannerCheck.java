@@ -45,54 +45,55 @@ public class ScannerCheck implements IScannerCheck {
             final Optional<TabNabbingProblem> problem = httpReader.getProblem();
 
             if (problem.isPresent()) {
-                boolean referrerHeaderPresent =
-                        helpers.analyzeResponse(htmlResponse)
-                                .getHeaders()
-                                .stream()
-                                .anyMatch(header ->
-                                        "referrer-policy:no-referrer"
-                                                .equals(header.toLowerCase()
-                                                        .replaceAll(" ", "")));
-                if (referrerHeaderPresent) {
-                    if (problem.get().getProblemType().equals(TabNabbingProblem.ProblemType.HTML)) {
-                        return Arrays.asList(new CustomScanIssue(
-                                iHttpRequestResponse,
-                                helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
-                                IssueType.HTML_LINK_REFERRER_POLICY_HEADER,
-                                problem.get().getProblem()
+                boolean referrerHeaderPresent = isReferrerHeaderPresent(htmlResponse);
+                TabNabbingProblem.ProblemType problemType = problem.get().getProblemType();
 
-                        ));
-                    }
-                    if (problem.get().getProblemType().equals(TabNabbingProblem.ProblemType.JAVA_SCRIPT)) {
-                        return Arrays.asList(new CustomScanIssue(
-                                iHttpRequestResponse,
-                                helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
-                                IssueType.JAVASCRIPT_WIN_OPEN_REFERRER_POLICY_HEADER,
-                                problem.get().getProblem()
+                if (referrerHeaderPresent
+                        && TabNabbingProblem.ProblemType.HTML.equals(problemType)) {
 
-                        ));
-                    }
-                } else {
-                    if (problem.get().getProblemType().equals(TabNabbingProblem.ProblemType.HTML)) {
-                        return Arrays.asList(new CustomScanIssue(
-                                iHttpRequestResponse,
-                                helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
-                                IssueType.HTML_LINK_NO_REFERRER_POLICY_HEADER,
-                                problem.get().getProblem()
+                    return Arrays.asList(new CustomScanIssue(
+                            iHttpRequestResponse,
+                            helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
+                            IssueType.HTML_LINK_REFERRER_POLICY_HEADER,
+                            problem.get().getProblem()
 
-                        ));
-                    }
-                    if (problem.get().getProblemType().equals(TabNabbingProblem.ProblemType.JAVA_SCRIPT)) {
-                        return Arrays.asList(new CustomScanIssue(
-                                iHttpRequestResponse,
-                                helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
-                                IssueType.JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER,
-                                problem.get().getProblem()
+                    ));
 
-                        ));
-                    }
+                } else if (referrerHeaderPresent
+                        && TabNabbingProblem.ProblemType.JAVA_SCRIPT.equals(problemType)) {
+
+                    return Arrays.asList(new CustomScanIssue(
+                            iHttpRequestResponse,
+                            helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
+                            IssueType.JAVASCRIPT_WIN_OPEN_REFERRER_POLICY_HEADER,
+                            problem.get().getProblem()
+
+                    ));
+
+                } else if (!referrerHeaderPresent
+                        && TabNabbingProblem.ProblemType.HTML.equals(problemType)) {
+
+                    return Arrays.asList(new CustomScanIssue(
+                            iHttpRequestResponse,
+                            helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
+                            IssueType.HTML_LINK_NO_REFERRER_POLICY_HEADER,
+                            problem.get().getProblem()
+
+                    ));
+
+                } else if (!referrerHeaderPresent
+                        && TabNabbingProblem.ProblemType.JAVA_SCRIPT.equals(problemType)) {
+
+                    return Arrays.asList(new CustomScanIssue(
+                            iHttpRequestResponse,
+                            helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
+                            IssueType.JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER,
+                            problem.get().getProblem()
+
+                    ));
                 }
             }
+
         } finally {
             try {
                 httpReader.close();
@@ -101,6 +102,16 @@ public class ScannerCheck implements IScannerCheck {
             }
         }
         return Collections.emptyList();
+    }
+
+    private boolean isReferrerHeaderPresent(byte[] htmlResponse) {
+        return helpers.analyzeResponse(htmlResponse)
+                .getHeaders()
+                .stream()
+                .anyMatch(header ->
+                        "referrer-policy:no-referrer"
+                                .equalsIgnoreCase(header
+                                        .replaceAll(" ", "")));
     }
 
     @Override
