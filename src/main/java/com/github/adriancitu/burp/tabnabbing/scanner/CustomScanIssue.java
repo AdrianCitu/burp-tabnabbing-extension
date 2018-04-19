@@ -8,11 +8,11 @@ import java.net.URL;
 
 class CustomScanIssue implements IScanIssue {
 
+    private final IssueType issueType;
+    private final String issueDetail;
     private IHttpService httpService;
     private URL url;
     private IHttpRequestResponse[] httpMessages;
-    private final IssueType issueType;
-    private final String issueDetail;
 
     public CustomScanIssue(
             final IHttpRequestResponse iHttpRequestResponse,
@@ -39,7 +39,7 @@ class CustomScanIssue implements IScanIssue {
 
     @Override
     public int getIssueType() {
-        return 0;
+        return this.issueType.getName().hashCode();
     }
 
     @Override

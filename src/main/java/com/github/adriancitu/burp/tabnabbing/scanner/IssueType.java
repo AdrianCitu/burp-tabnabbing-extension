@@ -2,7 +2,7 @@ package com.github.adriancitu.burp.tabnabbing.scanner;
 
 public enum IssueType {
 
-    HTML_LINK_NO_REFERRER_POLICY_HEADER (
+    HTML_LINK_NO_REFERRER_POLICY_HEADER(
             "HTML link and no referrer header",
             "Found HTML link with no referrer attribute" +
                     " and no Referrer-Policy header present",
@@ -63,6 +63,7 @@ public enum IssueType {
     public String getConfidence() {
         return confidence;
     }
+
     public String getName() {
         return name;
     }

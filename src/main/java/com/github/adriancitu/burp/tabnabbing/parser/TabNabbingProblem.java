@@ -1,6 +1,6 @@
 package com.github.adriancitu.burp.tabnabbing.parser;
 
-final public class TabNabbingProblem {
+public final class TabNabbingProblem {
 
     private final String problem;
     private final ProblemType type;
@@ -10,15 +10,15 @@ final public class TabNabbingProblem {
         this.problem = problem;
     }
 
-    public enum ProblemType {
-        HTML, JAVA_SCRIPT
-    }
-
     public String getProblem() {
         return this.problem;
     }
 
     public ProblemType getProblemType() {
         return this.type;
+    }
+
+    public enum ProblemType {
+        HTML, JAVA_SCRIPT
     }
 }

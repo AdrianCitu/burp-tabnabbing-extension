@@ -4,13 +4,15 @@ import burp.*;
 import com.github.adriancitu.burp.tabnabbing.parser.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ScannerCheck implements IScannerCheck {
 
+
+    private static final Logger LOGGER =
+            Logger.getLogger(ScannerCheck.class.getName());
 
     private final IExtensionHelpers helpers;
 
@@ -43,7 +45,7 @@ public class ScannerCheck implements IScannerCheck {
             final Optional<TabNabbingProblem> problem = httpReader.getProblem();
 
             if (problem.isPresent()) {
-                boolean noReferrerHeaderPresent =
+                boolean referrerHeaderPresent =
                         helpers.analyzeResponse(htmlResponse)
                                 .getHeaders()
                                 .stream()
@@ -51,28 +53,9 @@ public class ScannerCheck implements IScannerCheck {
                                         "referrer-policy:no-referrer"
                                                 .equals(header.toLowerCase()
                                                         .replaceAll(" ", "")));
-                if (noReferrerHeaderPresent) {
+                if (referrerHeaderPresent) {
                     if (problem.get().getProblemType().equals(TabNabbingProblem.ProblemType.HTML)) {
-                        Arrays.asList(new CustomScanIssue(
-                                iHttpRequestResponse,
-                                helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
-                                IssueType.HTML_LINK_NO_REFERRER_POLICY_HEADER,
-                                problem.get().getProblem()
-
-                        ));
-                    }
-                    if (problem.get().getProblemType().equals(TabNabbingProblem.ProblemType.JAVA_SCRIPT)) {
-                        Arrays.asList(new CustomScanIssue(
-                                iHttpRequestResponse,
-                                helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
-                                IssueType.JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER,
-                                problem.get().getProblem()
-
-                        ));
-                    }
-                } else {
-                    if (problem.get().getProblemType().equals(TabNabbingProblem.ProblemType.HTML)) {
-                        Arrays.asList(new CustomScanIssue(
+                        return Arrays.asList(new CustomScanIssue(
                                 iHttpRequestResponse,
                                 helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
                                 IssueType.HTML_LINK_REFERRER_POLICY_HEADER,
@@ -81,10 +64,29 @@ public class ScannerCheck implements IScannerCheck {
                         ));
                     }
                     if (problem.get().getProblemType().equals(TabNabbingProblem.ProblemType.JAVA_SCRIPT)) {
-                        Arrays.asList(new CustomScanIssue(
+                        return Arrays.asList(new CustomScanIssue(
                                 iHttpRequestResponse,
                                 helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
                                 IssueType.JAVASCRIPT_WIN_OPEN_REFERRER_POLICY_HEADER,
+                                problem.get().getProblem()
+
+                        ));
+                    }
+                } else {
+                    if (problem.get().getProblemType().equals(TabNabbingProblem.ProblemType.HTML)) {
+                        return Arrays.asList(new CustomScanIssue(
+                                iHttpRequestResponse,
+                                helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
+                                IssueType.HTML_LINK_NO_REFERRER_POLICY_HEADER,
+                                problem.get().getProblem()
+
+                        ));
+                    }
+                    if (problem.get().getProblemType().equals(TabNabbingProblem.ProblemType.JAVA_SCRIPT)) {
+                        return Arrays.asList(new CustomScanIssue(
+                                iHttpRequestResponse,
+                                helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
+                                IssueType.JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER,
                                 problem.get().getProblem()
 
                         ));
@@ -95,17 +97,17 @@ public class ScannerCheck implements IScannerCheck {
             try {
                 httpReader.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public List<IScanIssue> doActiveScan(
             final IHttpRequestResponse iHttpRequestResponse,
             final IScannerInsertionPoint iScannerInsertionPoint) {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

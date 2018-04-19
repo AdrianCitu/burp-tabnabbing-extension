@@ -4,6 +4,7 @@ import com.github.adriancitu.burp.tabnabbing.util.HtmlByteArrayUtility;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -11,7 +12,7 @@ import java.util.logging.Logger;
  */
 public class HTMLAnchorReaderObserver extends AbstractObserver {
 
-    private final static Logger LOGGER =
+    private static final Logger LOGGER =
             Logger.getLogger(HTMLAnchorReaderObserver.class.getName());
 
     private boolean htmlAnchorFound = false;
@@ -64,25 +65,23 @@ public class HTMLAnchorReaderObserver extends AbstractObserver {
                 //look for a>
                 final byte[] nextBytes = byteReader.pull(2);
 
-                if ("a>".equals(new String(nextBytes).toLowerCase())) {
+                if ("a>".equalsIgnoreCase(new String(nextBytes))) {
                     this.close();
                 }
 
                 return;
             }
 
-        } catch (final Throwable e) {
+        } catch (final RuntimeException e) {
             this.close();
-            LOGGER.warning(
-                    "Exception thrown by the TabNabbing extension:"
-                            + e.getMessage());
+            LOGGER.log(Level.WARNING, e.getMessage(), e);
         }
     }
 
     @Override
     public Optional<TabNabbingProblem> getProblem() {
         if (problemFound()) {
-           return Optional.of(
+            return Optional.of(
                     new TabNabbingProblem(
                             TabNabbingProblem.ProblemType.HTML,
                             getProblemAsString()));

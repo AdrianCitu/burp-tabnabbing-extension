@@ -36,7 +36,7 @@ public class HTMLResponseReader implements IByteReader {
         final int askedOffset = index + initialNumberOgAskedBytes;
 
         if (askedOffset > bytesLength) {
-            return bytesLength - index -1;
+            return bytesLength - index - 1;
         }
 
         return initialNumberOgAskedBytes;

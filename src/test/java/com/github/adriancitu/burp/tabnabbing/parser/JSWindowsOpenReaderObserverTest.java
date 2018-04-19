@@ -49,7 +49,7 @@ public class JSWindowsOpenReaderObserverTest {
 
 
     @Test
-    public void testWindowOpenNotInsideScript (){
+    public void testWindowOpenNotInsideScript() {
         {
             final String jsWithProblem = "<body>\n" +
                     "<li><a href=\"bad.example.com\" rel=\"noopener\" target=\"_blank\">Vulnerable target using html link to open the new page</a></li>\n" +
@@ -64,7 +64,7 @@ public class JSWindowsOpenReaderObserverTest {
                     ((HTMLResponseReader) reader).getProblem();
 
             assertFalse(response.isPresent());
-         }
+        }
     }
 
 
@@ -90,7 +90,7 @@ public class JSWindowsOpenReaderObserverTest {
     }
 
     @Test
-    public void testWindowNoProblem (){
+    public void testWindowNoProblem() {
         {
             final String jsWithProblem = "<body>\n" +
                     "<li><a href=\"bad.example.com\" rel=\"noopener\" target=\"_blank\">Vulnerable target using html link to open the new page</a></li>\n" +

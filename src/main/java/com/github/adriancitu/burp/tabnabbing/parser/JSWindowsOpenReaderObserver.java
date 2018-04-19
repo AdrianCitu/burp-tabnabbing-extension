@@ -4,11 +4,12 @@ import com.github.adriancitu.burp.tabnabbing.util.HtmlByteArrayUtility;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class JSWindowsOpenReaderObserver extends AbstractObserver {
 
-    private final static Logger LOGGER =
+    private static final Logger LOGGER =
             Logger.getLogger(JSWindowsOpenReaderObserver.class.getName());
 
     private boolean scriptTagFound = false;
@@ -25,14 +26,14 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
             //<
             if (toHandle == 60d) {
                 final byte[] next7Bytes = byteReader.pull(7);
-                if ("script>".equals(new String(next7Bytes).toLowerCase())) {
+                if ("script>".equalsIgnoreCase(new String(next7Bytes))) {
                     scriptTagFound = true;
                     return;
                 }
 
                 if (scriptTagFound) {
                     final byte[] next8Bytes = byteReader.pull(8);
-                    if ("/script>".equals(new String(next8Bytes).toLowerCase())) {
+                    if ("/script>".equalsIgnoreCase(new String(next8Bytes))) {
                         scriptTagFound = false;
                         return;
                     }
@@ -46,7 +47,7 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
                     || toHandle == 87d) //W
                     ) {
                 final byte[] next11Bytes = byteReader.pull(10);
-                if ("indow.open".equals(new String(next11Bytes).toLowerCase())) {
+                if ("indow.open".equalsIgnoreCase(new String(next11Bytes))) {
                     windowsOpenFound = true;
                     getBuffer().add(toHandle);
                     return;
@@ -71,12 +72,9 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
 
                 return;
             }
-        } catch (Throwable e) {
+        } catch (RuntimeException e) {
             this.close();
-            LOGGER.warning(
-                    "Exception thrown by the TabNabbing extension:"
-                    + e.toString());
-
+            LOGGER.log(Level.WARNING, e.getMessage(), e);
         }
     }
 
