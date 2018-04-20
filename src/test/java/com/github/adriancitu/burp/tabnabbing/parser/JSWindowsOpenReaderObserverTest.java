@@ -1,5 +1,6 @@
 package com.github.adriancitu.burp.tabnabbing.parser;
 
+import com.github.adriancitu.burp.tabnabbing.scanner.IssueType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 public class JSWindowsOpenReaderObserverTest {
 
     private IByteReader reader = null;
-    private IByteReaderObserver jsListener = new JSWindowsOpenReaderObserver();
+    private IByteReaderObserver jsListener = new JSWindowsOpenReaderObserver(false);
 
     @Before
     public void before() throws Exception {
@@ -87,6 +88,8 @@ public class JSWindowsOpenReaderObserverTest {
         assertEquals(
                 "window.open('https://bad.example.com');",
                 response.get().getProblem());
+
+        assertEquals(IssueType.JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER, response.get().getIssueType());
     }
 
     @Test

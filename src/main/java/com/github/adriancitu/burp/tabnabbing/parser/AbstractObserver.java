@@ -8,7 +8,16 @@ import java.util.List;
 public abstract class AbstractObserver implements IByteReaderObserver {
 
     private final List<Byte> buffer = new ArrayList<>();
+    private final boolean noReferrerHeaderPresent;
     private boolean problemFound = false;
+
+    AbstractObserver(boolean noReferrerHeaderPresent1) {
+        this.noReferrerHeaderPresent = noReferrerHeaderPresent1;
+    }
+
+    boolean isNoReferrerHeaderPresent() {
+        return noReferrerHeaderPresent;
+    }
 
     List<Byte> getBuffer() {
         return buffer;

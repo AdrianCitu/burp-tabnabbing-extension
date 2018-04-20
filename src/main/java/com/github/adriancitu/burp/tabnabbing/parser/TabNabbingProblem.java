@@ -1,11 +1,13 @@
 package com.github.adriancitu.burp.tabnabbing.parser;
 
+import com.github.adriancitu.burp.tabnabbing.scanner.IssueType;
+
 public final class TabNabbingProblem {
 
     private final String problem;
-    private final ProblemType type;
+    private final IssueType type;
 
-    TabNabbingProblem(ProblemType type, String problem) {
+    TabNabbingProblem(IssueType type, String problem) {
         this.type = type;
         this.problem = problem;
     }
@@ -14,11 +16,7 @@ public final class TabNabbingProblem {
         return this.problem;
     }
 
-    public ProblemType getProblemType() {
+    public IssueType getIssueType() {
         return this.type;
-    }
-
-    public enum ProblemType {
-        HTML, JAVA_SCRIPT
     }
 }

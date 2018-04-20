@@ -1,5 +1,9 @@
 package com.github.adriancitu.burp.tabnabbing.scanner;
 
+/**
+ * Enum representing the possible types of tabnabbing issues; javascript
+ * or html side, with or with no Referrer-Policy: no-referrer HTTP header.
+ */
 public enum IssueType {
 
     HTML_LINK_NO_REFERRER_POLICY_HEADER(

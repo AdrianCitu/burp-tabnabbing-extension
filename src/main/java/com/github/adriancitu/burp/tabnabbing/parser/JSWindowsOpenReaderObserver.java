@@ -1,5 +1,6 @@
 package com.github.adriancitu.burp.tabnabbing.parser;
 
+import com.github.adriancitu.burp.tabnabbing.scanner.IssueType;
 import com.github.adriancitu.burp.tabnabbing.util.HtmlByteArrayUtility;
 
 import java.util.Objects;
@@ -7,6 +8,10 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Observer that is able to find JavaScript "<script>" tag and
+ * "window.open" call inside a code block.
+ */
 public class JSWindowsOpenReaderObserver extends AbstractObserver {
 
     private static final Logger LOGGER =
@@ -15,8 +20,13 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
     private boolean scriptTagFound = false;
     private boolean windowsOpenFound = false;
 
+    public JSWindowsOpenReaderObserver(boolean noReferrerHeaderPresent1) {
+        super(noReferrerHeaderPresent1);
+    }
+
+
     @Override
-    public void push(IByteReader byteReader, byte toHandle) {
+    public void handleByte(IByteReader byteReader, byte toHandle) {
 
         try {
             if (problemFound()) {
@@ -25,14 +35,14 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
 
             //<
             if (toHandle == 60d) {
-                final byte[] next7Bytes = byteReader.pull(7);
+                final byte[] next7Bytes = byteReader.fetchMoreBytes(7);
                 if ("script>".equalsIgnoreCase(new String(next7Bytes))) {
                     scriptTagFound = true;
                     return;
                 }
 
                 if (scriptTagFound) {
-                    final byte[] next8Bytes = byteReader.pull(8);
+                    final byte[] next8Bytes = byteReader.fetchMoreBytes(8);
                     if ("/script>".equalsIgnoreCase(new String(next8Bytes))) {
                         scriptTagFound = false;
                         return;
@@ -46,7 +56,7 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
                     && (toHandle == 119d //w
                     || toHandle == 87d) //W
                     ) {
-                final byte[] next11Bytes = byteReader.pull(10);
+                final byte[] next11Bytes = byteReader.fetchMoreBytes(10);
                 if ("indow.open".equalsIgnoreCase(new String(next11Bytes))) {
                     windowsOpenFound = true;
                     getBuffer().add(toHandle);
@@ -81,10 +91,17 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
     @Override
     public Optional<TabNabbingProblem> getProblem() {
 
-        if (problemFound()) {
+        if (problemFound() && isNoReferrerHeaderPresent()) {
             return Optional.of(
                     new TabNabbingProblem(
-                            TabNabbingProblem.ProblemType.JAVA_SCRIPT,
+                            IssueType.JAVASCRIPT_WIN_OPEN_REFERRER_POLICY_HEADER,
+                            getProblemAsString()));
+        }
+
+        if (problemFound() && !isNoReferrerHeaderPresent()) {
+            return Optional.of(
+                    new TabNabbingProblem(
+                            IssueType.JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER,
                             getProblemAsString()));
         }
         return Optional.empty();
@@ -109,7 +126,6 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(scriptTagFound, windowsOpenFound);
     }
 }

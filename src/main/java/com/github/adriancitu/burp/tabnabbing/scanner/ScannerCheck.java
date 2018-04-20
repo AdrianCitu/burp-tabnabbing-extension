@@ -17,16 +17,27 @@ public class ScannerCheck implements IScannerCheck {
     private final IExtensionHelpers helpers;
 
     public ScannerCheck(final IExtensionHelpers helpers) {
-
         this.helpers = helpers;
     }
 
-    private HTMLResponseReader createResponseReader(byte[] httpToParse) {
+    /**
+     * Creates an instance of {@link HTMLResponseReader}. It also
+     * creates different {@link IByteReaderObserver}s that will
+     * be attached to the {@link HTMLResponseReader} instance.
+     *
+     * @param httpToParse             the (HTTP) response to parse and check for problems.
+     * @param isReffererHeaderPresent flag to indicate if the Referrer-Policy: no-referrer
+     *                                header is present in the HTTP response.
+     * @return an isntance of {@link HTMLResponseReader}
+     */
+    private HTMLResponseReader createResponseReader(
+            byte[] httpToParse,
+            boolean isReffererHeaderPresent) {
         HTMLResponseReader httpReader = new HTMLResponseReader(httpToParse);
 
         List<IByteReaderObserver> observers = new ArrayList<>();
-        observers.add(new HTMLAnchorReaderObserver());
-        observers.add(new JSWindowsOpenReaderObserver());
+        observers.add(new HTMLAnchorReaderObserver(isReffererHeaderPresent));
+        observers.add(new JSWindowsOpenReaderObserver(isReffererHeaderPresent));
         httpReader.attachObservers(observers);
 
         return httpReader;
@@ -38,60 +49,22 @@ public class ScannerCheck implements IScannerCheck {
 
         byte[] htmlResponse = iHttpRequestResponse.getResponse();
 
-        HTMLResponseReader httpReader = createResponseReader(htmlResponse);
+        HTMLResponseReader httpReader = createResponseReader(
+                htmlResponse,
+                isReferrerHeaderPresent(htmlResponse));
 
         try {
 
             final Optional<TabNabbingProblem> problem = httpReader.getProblem();
 
             if (problem.isPresent()) {
-                boolean referrerHeaderPresent = isReferrerHeaderPresent(htmlResponse);
-                TabNabbingProblem.ProblemType problemType = problem.get().getProblemType();
+                return Arrays.asList(new CustomScanIssue(
+                        iHttpRequestResponse,
+                        helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
+                        problem.get().getIssueType(),
+                        problem.get().getProblem()
 
-                if (referrerHeaderPresent
-                        && TabNabbingProblem.ProblemType.HTML.equals(problemType)) {
-
-                    return Arrays.asList(new CustomScanIssue(
-                            iHttpRequestResponse,
-                            helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
-                            IssueType.HTML_LINK_REFERRER_POLICY_HEADER,
-                            problem.get().getProblem()
-
-                    ));
-
-                } else if (referrerHeaderPresent
-                        && TabNabbingProblem.ProblemType.JAVA_SCRIPT.equals(problemType)) {
-
-                    return Arrays.asList(new CustomScanIssue(
-                            iHttpRequestResponse,
-                            helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
-                            IssueType.JAVASCRIPT_WIN_OPEN_REFERRER_POLICY_HEADER,
-                            problem.get().getProblem()
-
-                    ));
-
-                } else if (!referrerHeaderPresent
-                        && TabNabbingProblem.ProblemType.HTML.equals(problemType)) {
-
-                    return Arrays.asList(new CustomScanIssue(
-                            iHttpRequestResponse,
-                            helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
-                            IssueType.HTML_LINK_NO_REFERRER_POLICY_HEADER,
-                            problem.get().getProblem()
-
-                    ));
-
-                } else if (!referrerHeaderPresent
-                        && TabNabbingProblem.ProblemType.JAVA_SCRIPT.equals(problemType)) {
-
-                    return Arrays.asList(new CustomScanIssue(
-                            iHttpRequestResponse,
-                            helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
-                            IssueType.JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER,
-                            problem.get().getProblem()
-
-                    ));
-                }
+                ));
             }
 
         } finally {

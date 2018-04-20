@@ -9,7 +9,7 @@ public class HTMLResponseReader implements IByteReader {
 
     private final byte[] bytes;
     private final int bytesLength;
-    private List<IByteReaderObserver> listeners;
+    private List<IByteReaderObserver> observers;
     private int index = 0;
 
     public HTMLResponseReader(final byte[] bytes) {
@@ -17,10 +17,19 @@ public class HTMLResponseReader implements IByteReader {
         this.bytesLength = this.bytes.length;
     }
 
+    /**
+     * @return an {@link Optional} representing a {@link TabNabbingProblem}. The
+     * optional is computed by calling for each byte
+     * on each {@link IByteReaderObserver} attached
+     * {@link IByteReaderObserver#problemFound()} and eventually
+     * {@link IByteReaderObserver#getProblem()}.
+     * <p>
+     * The method returns after first problem found.
+     */
     public Optional<TabNabbingProblem> getProblem() {
         for (index = 0; index < bytes.length; index++) {
-            for (final IByteReaderObserver listener : listeners) {
-                listener.push(this, bytes[index]);
+            for (final IByteReaderObserver listener : observers) {
+                listener.handleByte(this, bytes[index]);
 
                 if (listener.problemFound()) {
                     return listener.getProblem();
@@ -43,7 +52,7 @@ public class HTMLResponseReader implements IByteReader {
     }
 
     @Override
-    public byte[] pull(final int howManyBytes) {
+    public byte[] fetchMoreBytes(final int howManyBytes) {
         final byte[] returnValue =
                 new byte[computeTheSizeOfTheResponse(howManyBytes)];
 
@@ -58,18 +67,18 @@ public class HTMLResponseReader implements IByteReader {
     @Override
     public void attachObservers(
             final List<IByteReaderObserver> readerList) {
-        listeners = new Vector<>(readerList.size());
+        observers = new Vector<>(readerList.size());
         for (final IByteReaderObserver listener : readerList) {
-            listeners.add(listener);
+            observers.add(listener);
         }
     }
 
     @Override
     public void close() throws IOException {
-        for (final IByteReaderObserver listener : this.listeners) {
+        for (final IByteReaderObserver listener : this.observers) {
             listener.close();
         }
-        listeners.clear();
+        observers.clear();
         index = 0;
     }
 }

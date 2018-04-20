@@ -1,5 +1,6 @@
 package com.github.adriancitu.burp.tabnabbing.parser;
 
+import com.github.adriancitu.burp.tabnabbing.scanner.IssueType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 public class HTMLAnchorReaderListenerTest {
 
     private IByteReader reader = null;
-    private IByteReaderObserver hrefListener = new HTMLAnchorReaderObserver();
+    private IByteReaderObserver hrefListener = new HTMLAnchorReaderObserver(false);
 
     @Before
     public void before() throws Exception {
@@ -61,6 +62,7 @@ public class HTMLAnchorReaderListenerTest {
 
         assertTrue(response.isPresent());
         assertEquals("<a href=\"#mw-head\">", response.get().getProblem());
+        assertEquals(IssueType.HTML_LINK_NO_REFERRER_POLICY_HEADER, response.get().getIssueType());
 
     }
 

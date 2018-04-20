@@ -50,30 +50,30 @@ public class HTMLResponseReaderTest {
 
         assertFalse(problem.isPresent());
 
-        //check that the IByteReaderObserver.push and
+        //check that the IByteReaderObserver.handleByte and
         //IByteReaderObserver.problemFound was called for each byte frm bytes
-        verify(mockListener, times(bytes.length)).push(anyObject(), anyByte());
+        verify(mockListener, times(bytes.length)).handleByte(anyObject(), anyByte());
         verify(mockListener, times(bytes.length)).problemFound();
 
         verify(mockListener, times(0)).getProblem();
     }
 
     /**
-     * Method: pull(int howManyBytes)
+     * Method: fetchMoreBytes(int howManyBytes)
      */
     @Test
     public void testPull() throws Exception {
 
         //get 1 byte
-        byte[] pull = this.reader.pull(1);
+        byte[] pull = this.reader.fetchMoreBytes(1);
         assertEquals(1, pull.length);
 
         //get all the bytes
-        pull = this.reader.pull(bytes.length - 1);
+        pull = this.reader.fetchMoreBytes(bytes.length - 1);
         assertEquals(bytes.length - 1, pull.length);
 
         //get more bytes than the bufffer
-        pull = this.reader.pull(10000);
+        pull = this.reader.fetchMoreBytes(10000);
         assertEquals(bytes.length - 1, pull.length);
     }
 

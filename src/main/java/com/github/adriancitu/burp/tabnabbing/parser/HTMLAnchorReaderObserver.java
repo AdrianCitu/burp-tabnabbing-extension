@@ -1,5 +1,6 @@
 package com.github.adriancitu.burp.tabnabbing.parser;
 
+import com.github.adriancitu.burp.tabnabbing.scanner.IssueType;
 import com.github.adriancitu.burp.tabnabbing.util.HtmlByteArrayUtility;
 
 import java.util.Objects;
@@ -8,17 +9,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Observer that is able to find HTML anchor tag and check if it is
+ * vulnerable to the tabnabbing problem.
  */
 public class HTMLAnchorReaderObserver extends AbstractObserver {
 
     private static final Logger LOGGER =
             Logger.getLogger(HTMLAnchorReaderObserver.class.getName());
 
+    /**
+     * true if the '<a' is found.
+     */
     private boolean htmlAnchorFound = false;
 
+    public HTMLAnchorReaderObserver(boolean noReffererHtmlHeader) {
+        super(noReffererHtmlHeader);
+    }
+
     @Override
-    public void push(final IByteReader byteReader, final byte toHandle) {
+    public void handleByte(final IByteReader byteReader, final byte toHandle) {
 
         try {
             if (problemFound()) {
@@ -27,7 +36,7 @@ public class HTMLAnchorReaderObserver extends AbstractObserver {
 
             //<
             if (toHandle == 60d) {
-                final byte[] nextTwoBytes = byteReader.pull(2);
+                final byte[] nextTwoBytes = byteReader.fetchMoreBytes(2);
 
                 if (nextTwoBytes != null
                         && nextTwoBytes.length == 2 &&
@@ -63,7 +72,7 @@ public class HTMLAnchorReaderObserver extends AbstractObserver {
             // /
             if (toHandle == 47d) {
                 //look for a>
-                final byte[] nextBytes = byteReader.pull(2);
+                final byte[] nextBytes = byteReader.fetchMoreBytes(2);
 
                 if ("a>".equalsIgnoreCase(new String(nextBytes))) {
                     this.close();
@@ -80,10 +89,17 @@ public class HTMLAnchorReaderObserver extends AbstractObserver {
 
     @Override
     public Optional<TabNabbingProblem> getProblem() {
-        if (problemFound()) {
+        if (problemFound() && isNoReferrerHeaderPresent()) {
             return Optional.of(
                     new TabNabbingProblem(
-                            TabNabbingProblem.ProblemType.HTML,
+                            IssueType.HTML_LINK_REFERRER_POLICY_HEADER,
+                            getProblemAsString()));
+        }
+
+        if (problemFound() && !isNoReferrerHeaderPresent()) {
+            return Optional.of(
+                    new TabNabbingProblem(
+                            IssueType.HTML_LINK_NO_REFERRER_POLICY_HEADER,
                             getProblemAsString()));
         }
 

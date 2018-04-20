@@ -12,12 +12,12 @@ interface Closable {
 
 package com.github.adriancitu.burp.tabnabbing.parser {
 interface IByteReader {
-   public byte[] pull(int bytes)
+   public byte[] fetchMoreBytes(int howManyBytes)
    public void attachListeners(List<IByteReaderObserver> listeners)
 }
 
 interface IByteReaderObserver {
-    void push(IByteReader reader, byte toHandle)
+    void handleByte(IByteReader reader, byte toHandle)
     boolean problemFound()
     Optional<TabNappingProblem>getProblem()
 }
