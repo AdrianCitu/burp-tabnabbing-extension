@@ -12,9 +12,10 @@ public class BurpExtender implements IBurpExtender {
 
 
         // set our extension name
-        callbacks.setExtensionName("(Reverse) Tabnabbing checks.");
+        iBurpExtenderCallbacks.setExtensionName("(Reverse) Tabnabbing checks.");
 
         // register the custom scanner check
-        callbacks.registerScannerCheck(new ScannerCheck(callbacks.getHelpers()));
+        iBurpExtenderCallbacks.registerScannerCheck(
+                new ScannerCheck(iBurpExtenderCallbacks.getHelpers()));
     }
 }
