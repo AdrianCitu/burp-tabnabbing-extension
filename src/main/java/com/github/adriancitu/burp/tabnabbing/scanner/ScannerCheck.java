@@ -4,9 +4,12 @@ import burp.*;
 import com.github.adriancitu.burp.tabnabbing.parser.*;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class ScannerCheck implements IScannerCheck {
 
@@ -55,17 +58,23 @@ public class ScannerCheck implements IScannerCheck {
 
         try {
 
-            final Optional<TabNabbingProblem> problem = httpReader.getProblem();
+            final List<TabNabbingProblem> problems = httpReader.getProblems();
 
-            if (problem.isPresent()) {
-                return Arrays.asList(new CustomScanIssue(
-                        iHttpRequestResponse,
-                        helpers.analyzeRequest(iHttpRequestResponse).getUrl(),
-                        problem.get().getIssueType(),
-                        problem.get().getProblem()
+            List<IScanIssue> returnValue =
+                    problems.stream()
+                            .map(
+                                    problem ->
+                                            new CustomScanIssue(
+                                                iHttpRequestResponse,
+                                                helpers.analyzeRequest(
+                                                        iHttpRequestResponse).getUrl(),
+                                                problem.getIssueType(),
+                                                problem.getProblem()
 
-                ));
-            }
+                    )).collect(Collectors.toList());
+
+            return returnValue;
+
 
         } finally {
             try {
@@ -74,7 +83,6 @@ public class ScannerCheck implements IScannerCheck {
                 LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
         }
-        return Collections.emptyList();
     }
 
     private boolean isReferrerHeaderPresent(byte[] htmlResponse) {

@@ -77,8 +77,6 @@ public class HTMLAnchorReaderObserver extends AbstractObserver {
                 if ("a>".equalsIgnoreCase(new String(nextBytes))) {
                     this.close();
                 }
-
-                return;
             }
 
         } catch (final RuntimeException e) {

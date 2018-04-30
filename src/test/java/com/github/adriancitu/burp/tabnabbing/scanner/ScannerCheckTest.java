@@ -152,6 +152,40 @@ public class ScannerCheckTest {
     }
 
     @Test
+    public void testDoPassiveScanHTMLProblemAndJsProblem() throws Exception {
+
+        final Path path = Paths.get("src/test/resources/badHrefResponseAndBadJsResponse.html");
+        final byte[] data = Files.readAllBytes(path);
+
+        when(iHttpRequestResponse.getResponse()).thenReturn(data);
+
+        when(helpers.analyzeResponse(any())).thenReturn(iResponseInfo);
+        when(iResponseInfo.getHeaders()).thenReturn(Arrays.asList("referrer-policy:no-referrer"));
+
+        when(helpers.analyzeRequest(any(IHttpRequestResponse.class))).thenReturn(iRequestInfo);
+        when(iRequestInfo.getUrl()).thenReturn(new URL("http://fake.com"));
+
+        List<IScanIssue> iScanIssues =
+                scannerCheck.doPassiveScan(iHttpRequestResponse);
+
+        assertEquals(2, iScanIssues.size());
+
+        assertEquals(
+                IssueType.HTML_LINK_REFERRER_POLICY_HEADER.getName(),
+                iScanIssues.get(0).getIssueName());
+
+
+        assertEquals(
+                IssueType.JAVASCRIPT_WIN_OPEN_REFERRER_POLICY_HEADER.getName(),
+                iScanIssues.get(1).getIssueName());
+        assertEquals(
+                new URL("http://fake.com"),
+                iScanIssues.get(0).getUrl());
+
+    }
+
+
+    @Test
     public void testDoPassiveScanNoProblem() throws Exception {
         final Path path = Paths.get("src/test/resources/bigGoodHREFResponse.html");
         final byte[] data = Files.readAllBytes(path);

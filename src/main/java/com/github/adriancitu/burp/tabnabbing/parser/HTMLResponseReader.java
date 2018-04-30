@@ -1,8 +1,9 @@
 package com.github.adriancitu.burp.tabnabbing.parser;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Vector;
 
 public class HTMLResponseReader implements IByteReader {
@@ -18,26 +19,36 @@ public class HTMLResponseReader implements IByteReader {
     }
 
     /**
-     * @return an {@link Optional} representing a {@link TabNabbingProblem}. The
-     * optional is computed by calling for each byte
+     * @return a {@link List} of {@link TabNabbingProblem}s. The
+     * list is computed by calling for each byte
      * on each {@link IByteReaderObserver} attached
      * {@link IByteReaderObserver#problemFound()} and eventually
      * {@link IByteReaderObserver#getProblem()}.
      * <p>
-     * The method returns after first problem found.
+     * Once an observer found a problem, then it is removed from the
+     * list of observer so the method will return at most one problem
+     * by listener.
      */
-    public Optional<TabNabbingProblem> getProblem() {
-        for (index = 0; index < bytes.length; index++) {
-            for (final IByteReaderObserver listener : observers) {
-                listener.handleByte(this, bytes[index]);
+    public List<TabNabbingProblem> getProblems() {
+        List<TabNabbingProblem> returnValue =
+                new ArrayList<>(observers.size());
 
-                if (listener.problemFound()) {
-                    return listener.getProblem();
+
+        for (index = 0; index < bytes.length; index++) {
+            Iterator<IByteReaderObserver> iterator = observers.iterator();
+            while (iterator.hasNext()) {
+                IByteReaderObserver observer = iterator.next();
+                observer.handleByte(this, bytes[index]);
+
+                if (observer.problemFound()
+                        && observer.getProblem().isPresent()) {
+                    returnValue.add(observer.getProblem().get());
+                    iterator.remove();
                 }
             }
         }
 
-        return Optional.empty();
+        return returnValue;
     }
 
     private int computeTheSizeOfTheResponse(final int initialNumberOgAskedBytes) {

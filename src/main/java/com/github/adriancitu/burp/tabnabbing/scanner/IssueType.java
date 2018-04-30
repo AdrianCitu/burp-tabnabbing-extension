@@ -7,7 +7,7 @@ package com.github.adriancitu.burp.tabnabbing.scanner;
 public enum IssueType {
 
     HTML_LINK_NO_REFERRER_POLICY_HEADER(
-            "HTML link and no referrer header",
+            "Tabnabbing (HTML link and no referrer header)",
             "Found HTML link with no referrer attribute" +
                     " and no Referrer-Policy header present",
             Constants.SEVERITY_INFO,
@@ -17,7 +17,7 @@ public enum IssueType {
                     + Constants.HEADER_REMEDIATION
     ),
     HTML_LINK_REFERRER_POLICY_HEADER(
-            "HTML link and referrer header",
+            "Tabnabbing(HTML link and referrer header)",
             "Found HTML link with no referrer attribute " +
                     "BUT Referrer-Policy header present",
             Constants.SEVERITY_INFO,
@@ -26,7 +26,7 @@ public enum IssueType {
     ),
 
     JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER(
-            "Javascript window open and no referrer header",
+            "Tabnabbing(Javascript window open and no referrer header)",
             " Found Javascript call to window.open" +
                     " and no Referrer-Policy header present",
             Constants.SEVERITY_INFO,
@@ -36,7 +36,7 @@ public enum IssueType {
                     + Constants.HEADER_REMEDIATION
     ),
     JAVASCRIPT_WIN_OPEN_REFERRER_POLICY_HEADER(
-            "Javascript window open and referrer header",
+            "Tabnabbing(Javascript window open and referrer header)",
             " Found Javascript call to window.open " +
                     " BUT Referrer-Policy header present",
             Constants.SEVERITY_INFO,

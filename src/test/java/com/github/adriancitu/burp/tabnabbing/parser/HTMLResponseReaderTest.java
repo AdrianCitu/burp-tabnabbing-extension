@@ -5,10 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
@@ -42,13 +44,13 @@ public class HTMLResponseReaderTest {
     }
 
     /**
-     * Method: getProblem()
+     * Method: getProblems()
      */
     @Test
     public void testGetProblemNoPb() {
-        final Optional<TabNabbingProblem> problem = reader.getProblem();
+        final List<TabNabbingProblem> problem = reader.getProblems();
 
-        assertFalse(problem.isPresent());
+        assertTrue(problem.isEmpty());
 
         //check that the IByteReaderObserver.handleByte and
         //IByteReaderObserver.problemFound was called for each byte frm bytes

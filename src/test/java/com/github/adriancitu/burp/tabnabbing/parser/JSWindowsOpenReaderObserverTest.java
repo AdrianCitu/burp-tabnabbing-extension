@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertFalse;
@@ -41,10 +42,10 @@ public class JSWindowsOpenReaderObserverTest {
                 noHtml.getBytes());
         reader.attachObservers(Arrays.asList(jsListener));
 
-        final Optional<TabNabbingProblem> response =
-                ((HTMLResponseReader) reader).getProblem();
+        final List<TabNabbingProblem> response =
+                ((HTMLResponseReader) reader).getProblems();
 
-        assertFalse(response.isPresent());
+        assertTrue(response.isEmpty());
 
     }
 
@@ -61,10 +62,10 @@ public class JSWindowsOpenReaderObserverTest {
                     jsWithProblem.getBytes());
             reader.attachObservers(Arrays.asList(jsListener));
 
-            final Optional<TabNabbingProblem> response =
-                    ((HTMLResponseReader) reader).getProblem();
+            final List<TabNabbingProblem> response =
+                    ((HTMLResponseReader) reader).getProblems();
 
-            assertFalse(response.isPresent());
+            assertTrue(response.isEmpty());
         }
     }
 
@@ -81,15 +82,16 @@ public class JSWindowsOpenReaderObserverTest {
                 jsWithProblem.getBytes());
         reader.attachObservers(Arrays.asList(jsListener));
 
-        final Optional<TabNabbingProblem> response =
-                ((HTMLResponseReader) reader).getProblem();
+        final List<TabNabbingProblem> response =
+                ((HTMLResponseReader) reader).getProblems();
 
-        assertTrue(response.isPresent());
+        assertTrue(response.size() == 1);
         assertEquals(
                 "window.open('https://bad.example.com');",
-                response.get().getProblem());
+                response.get(0).getProblem());
 
-        assertEquals(IssueType.JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER, response.get().getIssueType());
+        assertEquals(IssueType.JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER,
+                response.get(0).getIssueType());
     }
 
     @Test
@@ -105,10 +107,10 @@ public class JSWindowsOpenReaderObserverTest {
                     jsWithProblem.getBytes());
             reader.attachObservers(Arrays.asList(jsListener));
 
-            final Optional<TabNabbingProblem> response =
-                    ((HTMLResponseReader) reader).getProblem();
+            final List<TabNabbingProblem> response =
+                    ((HTMLResponseReader) reader).getProblems();
 
-            assertFalse(response.isPresent());
+            assertTrue(response.isEmpty());
         }
     }
 } 

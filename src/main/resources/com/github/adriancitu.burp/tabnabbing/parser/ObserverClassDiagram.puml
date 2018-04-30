@@ -1,7 +1,7 @@
 @startuml
 legend top left
 Observer/Observable class diagram
-
+for parsing HTML
 end legend
 
 package java.io {

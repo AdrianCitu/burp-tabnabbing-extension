@@ -45,7 +45,6 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
                     final byte[] next8Bytes = byteReader.fetchMoreBytes(8);
                     if ("/script>".equalsIgnoreCase(new String(next8Bytes))) {
                         scriptTagFound = false;
-                        return;
                     }
                 }
                 return;
@@ -79,8 +78,6 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
                         this.close();
                     }
                 }
-
-                return;
             }
         } catch (RuntimeException e) {
             this.close();

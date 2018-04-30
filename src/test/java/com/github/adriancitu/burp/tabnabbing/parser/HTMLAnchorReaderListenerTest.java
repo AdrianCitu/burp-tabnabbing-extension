@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertFalse;
@@ -41,10 +42,10 @@ public class HTMLAnchorReaderListenerTest {
                 noHtml.getBytes());
         reader.attachObservers(Arrays.asList(hrefListener));
 
-        final Optional<TabNabbingProblem> response =
-                ((HTMLResponseReader) reader).getProblem();
+        final List<TabNabbingProblem> response =
+                ((HTMLResponseReader) reader).getProblems();
 
-        assertFalse(response.isPresent());
+        assertTrue(response.isEmpty());
 
     }
 
@@ -57,12 +58,12 @@ public class HTMLAnchorReaderListenerTest {
                 hRefWithProblem.getBytes());
         reader.attachObservers(Arrays.asList(hrefListener));
 
-        final Optional<TabNabbingProblem> response =
-                ((HTMLResponseReader) reader).getProblem();
+        final List<TabNabbingProblem> response =
+                ((HTMLResponseReader) reader).getProblems();
 
-        assertTrue(response.isPresent());
-        assertEquals("<a href=\"#mw-head\">", response.get().getProblem());
-        assertEquals(IssueType.HTML_LINK_NO_REFERRER_POLICY_HEADER, response.get().getIssueType());
+        assertTrue(response.size() == 1);
+        assertEquals("<a href=\"#mw-head\">", response.get(0).getProblem());
+        assertEquals(IssueType.HTML_LINK_NO_REFERRER_POLICY_HEADER, response.get(0).getIssueType());
 
     }
 
@@ -76,11 +77,11 @@ public class HTMLAnchorReaderListenerTest {
                 hRefWithProblem.getBytes());
         reader.attachObservers(Arrays.asList(hrefListener));
 
-        final Optional<TabNabbingProblem> response =
-                ((HTMLResponseReader) reader).getProblem();
+        final List<TabNabbingProblem> response =
+                ((HTMLResponseReader) reader).getProblems();
 
-        assertTrue(response.isPresent());
-        assertEquals("<a href=\"#p-search\">", response.get().getProblem());
+        assertTrue(response.size() == 1);
+        assertEquals("<a href=\"#p-search\">", response.get(0).getProblem());
 
     }
 
@@ -93,10 +94,10 @@ public class HTMLAnchorReaderListenerTest {
                 hRefWithProblem.getBytes());
         reader.attachObservers(Arrays.asList(hrefListener));
 
-        final Optional<TabNabbingProblem> response =
-                ((HTMLResponseReader) reader).getProblem();
+        final List<TabNabbingProblem> response =
+                ((HTMLResponseReader) reader).getProblems();
 
-        assertFalse(response.isPresent());
+        assertTrue(response.isEmpty());
 
     }
 
@@ -111,10 +112,10 @@ public class HTMLAnchorReaderListenerTest {
                 hRefWithProblem.getBytes());
         reader.attachObservers(Arrays.asList(hrefListener));
 
-        final Optional<TabNabbingProblem> response =
-                ((HTMLResponseReader) reader).getProblem();
+        final List<TabNabbingProblem> response =
+                ((HTMLResponseReader) reader).getProblems();
 
-        assertFalse(response.isPresent());
+        assertTrue(response.isEmpty());
     }
 
     @Test
@@ -127,10 +128,10 @@ public class HTMLAnchorReaderListenerTest {
                 hRefWithProblem.getBytes());
         reader.attachObservers(Arrays.asList(hrefListener));
 
-        final Optional<TabNabbingProblem> response =
-                ((HTMLResponseReader) reader).getProblem();
+        final List<TabNabbingProblem> response =
+                ((HTMLResponseReader) reader).getProblems();
 
-        assertTrue(response.isPresent());
-        assertEquals("<a href=\"#mw-head\">", response.get().getProblem());
+        assertTrue(response.size() == 1);
+        assertEquals("<a href=\"#mw-head\">", response.get(0).getProblem());
     }
 } 
