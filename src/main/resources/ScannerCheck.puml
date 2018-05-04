@@ -1,39 +1,90 @@
 @startuml
+legend top left
+
+Sequence diagram containing the
+creation of the customized ScannerCheck
+and the call of the IScannerCheck#doPassiveScan method
+
+end legend
+
 autonumber
 actor BurpRuntime
+participant "BurpExtender" as IBurpExtender << IBurpExtender >>
+participant "ScannerCheck" as IScannerCheck << IScannerCheck >>
+participant "HTMLResponseReader" as HTMLResponseReader << IByteReader >>
+participant "HTMLAnchorReaderObserver" as HTMLAnchorReaderObserver << IByteReaderObserver >>
+participant "JSWindowsOpenReaderObserver" as JSWindowsOpenReaderObserver << IByteReaderObserver >>
 
-BurpRuntime --> "BurpExtender \n implements \n IBurpExtender" : registerExtenderCallbacks
-"BurpExtender \n implements \n IBurpExtender" -> "ScannerCheck \n implements \n IScannerCheck": new (IExtensionHelpers helpers)
-"BurpExtender \n implements \n IBurpExtender" <-- "ScannerCheck \n implements \n IScannerCheck": return new
+activate IBurpExtender
 
-BurpRuntime -> "ScannerCheck \n implements \n IScannerCheck": List<IScanIssue> doPassiveScan()
+BurpRuntime --> IBurpExtender: registerExtenderCallbacks
 
-"ScannerCheck \n implements \n IScannerCheck" -> "HTMLResponseReader\nimplements\nIByteReader": createResponseReader()
-
-
-"HTMLResponseReader\nimplements\nIByteReader" -> "HTMLAnchorReaderObserver\nimplements\nIByteReaderObserver": new()
-"HTMLResponseReader\nimplements\nIByteReader" <-- "HTMLAnchorReaderObserver\nimplements\nIByteReaderObserver": return new
-
-"HTMLResponseReader\nimplements\nIByteReader" -> "JSWindowsOpenReaderObserver\nimplements\nIByteReaderObserver": new()
-"HTMLResponseReader\nimplements\nIByteReader" <-- "JSWindowsOpenReaderObserver\nimplements\nIByteReaderObserver": return new
-
-"HTMLResponseReader\nimplements\nIByteReader" --> "HTMLResponseReader\nimplements\nIByteReader": attachObservers
-"ScannerCheck \n implements \n IScannerCheck" <-- "HTMLResponseReader\nimplements\nIByteReader": return createResponseReader
-
-"ScannerCheck \n implements \n IScannerCheck" -> "HTMLResponseReader\nimplements\nIByteReader":Optional<TabNabbingProblem> getProblem()
-
-"HTMLResponseReader\nimplements\nIByteReader" ->"HTMLAnchorReaderObserver\nimplements\nIByteReaderObserver":Optional<TabNabbingProblem> getProblem()
-"HTMLResponseReader\nimplements\nIByteReader" <--"HTMLAnchorReaderObserver\nimplements\nIByteReaderObserver":return getProblem
+IBurpExtender -> IScannerCheck: new (IExtensionHelpers helpers)
+activate IScannerCheck
 
 
-"HTMLResponseReader\nimplements\nIByteReader" ->"JSWindowsOpenReaderObserver\nimplements\nIByteReaderObserver":Optional<TabNabbingProblem> getProblem()
-"HTMLResponseReader\nimplements\nIByteReader" <--"JSWindowsOpenReaderObserver\nimplements\nIByteReaderObserver":return getProblem
 
-"ScannerCheck \n implements \n IScannerCheck" <-- "HTMLResponseReader\nimplements\nIByteReader":return getProblem
+BurpRuntime -> IScannerCheck: List<IScanIssue> doPassiveScan()
 
-"HTMLResponseReader\nimplements\nIByteReader" -> "HTMLResponseReader\nimplements\nIByteReader": create List<IScanIssue>
+== Start of Observers Initialization ==
+activate HTMLResponseReader
+IScannerCheck -> HTMLResponseReader: createResponseReader()
 
-BurpRuntime <-- "ScannerCheck \n implements \n IScannerCheck": return doPassiveScan
+
+HTMLResponseReader -> HTMLAnchorReaderObserver: new()
+activate HTMLAnchorReaderObserver
+
+
+
+HTMLResponseReader -> JSWindowsOpenReaderObserver: new()
+activate JSWindowsOpenReaderObserver
+
+
+
+HTMLResponseReader --> HTMLResponseReader: attachObservers
+
+
+IScannerCheck <-- HTMLResponseReader: return createResponseReader
+
+== End of Observer Initialization ==
+IScannerCheck -> HTMLResponseReader:List<TabNabbingProblem> getProblems()
+
+loop over each byte of the HTML response
+
+HTMLResponseReader ->HTMLAnchorReaderObserver:Optional<TabNabbingProblem> getProblem()
+
+group observer could ask more bytes from the IByteReader
+ HTMLResponseReader <- HTMLAnchorReaderObserver: fetchMoreBytes(number of bytes to fetch)
+ HTMLResponseReader --> HTMLAnchorReaderObserver: return bytes[]
+end
+HTMLResponseReader <--HTMLAnchorReaderObserver:return Optional<TabNabbingProblem> getProblem
+
+
+HTMLResponseReader ->JSWindowsOpenReaderObserver:Optional<TabNabbingProblem> getProblem()
+group observer could ask more bytes from the IByteReader
+ HTMLResponseReader <- JSWindowsOpenReaderObserver: fetchMoreBytes(number of bytes to fetch)
+ HTMLResponseReader --> JSWindowsOpenReaderObserver: return bytes[]
+end
+HTMLResponseReader <--JSWindowsOpenReaderObserver:return Optional<TabNabbingProblem> getProblem
+end
+IScannerCheck <-- HTMLResponseReader:return getProblem
+
+
+HTMLResponseReader -> HTMLResponseReader: create List<IScanIssue>
+
+== Start of Observers clean up ==
+
+IScannerCheck -> HTMLResponseReader: close()
+HTMLResponseReader -> HTMLAnchorReaderObserver:close()
+deactivate HTMLAnchorReaderObserver
+
+HTMLResponseReader -> JSWindowsOpenReaderObserver:close()
+deactivate JSWindowsOpenReaderObserver
+IScannerCheck <-- HTMLResponseReader: return close()
+deactivate HTMLResponseReader
+== End of Observers clean up ==
+
+BurpRuntime <-- IScannerCheck: return doPassiveScan
 
 
 @enduml
