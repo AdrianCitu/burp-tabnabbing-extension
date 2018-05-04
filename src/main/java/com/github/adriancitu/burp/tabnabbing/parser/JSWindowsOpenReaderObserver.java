@@ -34,21 +34,7 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
             }
 
             //<
-            if (toHandle == 60d) {
-                final byte[] next7Bytes = byteReader.fetchMoreBytes(7);
-                if ("script>".equalsIgnoreCase(new String(next7Bytes))) {
-                    scriptTagFound = true;
-                    return;
-                }
-
-                if (scriptTagFound) {
-                    final byte[] next8Bytes = byteReader.fetchMoreBytes(8);
-                    if ("/script>".equalsIgnoreCase(new String(next8Bytes))) {
-                        scriptTagFound = false;
-                    }
-                }
-                return;
-            }
+            handle60dByte(byteReader, toHandle);
 
             //w or W
             if (scriptTagFound
@@ -85,23 +71,37 @@ public class JSWindowsOpenReaderObserver extends AbstractObserver {
         }
     }
 
+    private void handle60dByte(IByteReader byteReader, byte toHandle) {
+        if (toHandle == 60d) {
+            final byte[] next7Bytes = byteReader.fetchMoreBytes(7);
+            if ("script>".equalsIgnoreCase(new String(next7Bytes))) {
+                scriptTagFound = true;
+                return;
+            }
+
+            if (scriptTagFound) {
+                final byte[] next8Bytes = byteReader.fetchMoreBytes(8);
+                if ("/script>".equalsIgnoreCase(new String(next8Bytes))) {
+                    scriptTagFound = false;
+                }
+            }
+        }
+    }
+
     @Override
     public Optional<TabNabbingProblem> getProblem() {
 
-        if (problemFound() && isNoReferrerHeaderPresent()) {
+        if (problemFound()) {
             return Optional.of(
                     new TabNabbingProblem(
-                            IssueType.JAVASCRIPT_WIN_OPEN_REFERRER_POLICY_HEADER,
+                            isNoReferrerHeaderPresent() ?
+                                    IssueType.JAVASCRIPT_WIN_OPEN_REFERRER_POLICY_HEADER :
+                                    IssueType.JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER
+                            ,
                             getProblemAsString()));
+        } else {
+            return Optional.empty();
         }
-
-        if (problemFound() && !isNoReferrerHeaderPresent()) {
-            return Optional.of(
-                    new TabNabbingProblem(
-                            IssueType.JAVASCRIPT_WIN_OPEN_NO_REFERRER_POLICY_HEADER,
-                            getProblemAsString()));
-        }
-        return Optional.empty();
     }
 
 
