@@ -5,12 +5,12 @@ For more information about “Reverse Tabnabbing” attack please see https://ww
 By defaut the extension will scan the pages entirely but this behavior can be customized using the
 "tabnabbing.pagescan.strategy" (java) system variables.
 The possible options of "tabnabbing.pagescan.strategy" are:
- * STOP_AFTER_FIRST_FINDING (stops the scan after first finding)
- * STOP_AFTER_FIRST_HTML_AND_JS_FINDING (stop the scan after first HTML and JavaScript finding)
- * SCAN_ENTIRE_PAGE (default value)
+ * STOP_AFTER_FIRST_FINDING (stops the scan after first finding).
+ * STOP_AFTER_FIRST_HTML_AND_JS_FINDING (stop the scan after first HTML and JavaScript finding).
+ * SCAN_ENTIRE_PAGE (default value).
      
- The "tabnabbing.pagescan.strategy" system variable can be set-up at start time like this:
- java  -Dtabnabbing.pagescan.strategy=SCAN_ENTIRE_PAGE -jar burpsuite-pro-1.x.xx.jar
+The "tabnabbing.pagescan.strategy" system variable can be set-up at start time like this:
+java -Dtabnabbing.pagescan.strategy=SCAN_ENTIRE_PAGE -jar burpsuite-pro-x.x.xx.jar
  
  
  Requirements to run the extension:
