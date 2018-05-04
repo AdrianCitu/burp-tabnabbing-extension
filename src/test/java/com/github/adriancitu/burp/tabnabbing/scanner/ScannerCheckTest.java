@@ -10,10 +10,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -173,20 +172,16 @@ public class ScannerCheckTest {
         List<IScanIssue> iScanIssues =
                 scannerCheck.doPassiveScan(iHttpRequestResponse);
 
-        assertEquals(2, iScanIssues.size());
+        Map<String, IScanIssue> map = iScanIssues.stream().collect(
+                Collectors.toMap(
+                IScanIssue::getIssueName, Function.identity()
+        ));
 
-        assertEquals(
-                IssueType.HTML_LINK_REFERRER_POLICY_HEADER.getName(),
-                iScanIssues.get(0).getIssueName());
+        assertEquals(2, map.size());
 
+        assertTrue(map.containsKey(IssueType.HTML_LINK_REFERRER_POLICY_HEADER.getName()));
+        assertTrue(map.containsKey(IssueType.JAVASCRIPT_WIN_OPEN_REFERRER_POLICY_HEADER.getName()));
 
-        assertEquals(
-                IssueType.JAVASCRIPT_WIN_OPEN_REFERRER_POLICY_HEADER.getName(),
-                iScanIssues.get(1).getIssueName());
-
-        assertEquals(
-                new URL("http://fake.com"),
-                iScanIssues.get(0).getUrl());
 
         System.setProperty(HTMLResponseReader.SCAN_STRATEGY_SYSTEM_PROPERTY,
                 ScanStrategy.STOP_AFTER_FIRST_FINDING.toString());

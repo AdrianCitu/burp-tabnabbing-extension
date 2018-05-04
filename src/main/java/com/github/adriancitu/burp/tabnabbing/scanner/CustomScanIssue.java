@@ -22,7 +22,11 @@ class CustomScanIssue implements IScanIssue {
             final IssueType issueType,
             final String issueDetail) {
 
-        this.httpService = iHttpRequestResponse.getHttpService();
+        if (iHttpRequestResponse != null) {
+            this.httpService = iHttpRequestResponse.getHttpService();
+
+        }
+
         this.url = url;
         this.httpMessages = new IHttpRequestResponse[]{iHttpRequestResponse};
         this.issueType = issueType;
@@ -92,27 +96,15 @@ class CustomScanIssue implements IScanIssue {
         CustomScanIssue that = (CustomScanIssue) o;
         return getIssueType() == that.getIssueType() &&
                 Objects.equals(getIssueDetail(), that.getIssueDetail()) &&
-                Objects.equals(getHttpService(), that.getHttpService()) &&
                 Objects.equals(getUrl(), that.getUrl()) &&
                 Arrays.equals(getHttpMessages(), that.getHttpMessages());
     }
 
     @Override
     public int hashCode() {
-
-        int result = Objects.hash(getIssueType(), getIssueDetail(), getHttpService(), getUrl());
+        int result = Objects.hash(getIssueType(), getIssueDetail(), getUrl());
         result = 31 * result + Arrays.hashCode(getHttpMessages());
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "CustomScanIssue{" +
-                "issueType=" + issueType +
-                ", issueDetail='" + issueDetail + '\'' +
-                ", httpService=" + httpService +
-                ", url=" + url +
-                ", httpMessages=" + Arrays.toString(httpMessages) +
-                '}';
-    }
 }

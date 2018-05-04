@@ -60,7 +60,7 @@ public class ScannerCheck implements IScannerCheck {
 
             final List<TabNabbingProblem> problems = httpReader.getProblems();
 
-            List<IScanIssue> returnValue =
+            return
                     problems.stream()
                             .map(
                                     problem ->
@@ -72,9 +72,6 @@ public class ScannerCheck implements IScannerCheck {
                                                     problem.getProblem()
 
                                             )).collect(Collectors.toList());
-
-            return returnValue;
-
 
         } finally {
             try {

@@ -33,7 +33,6 @@ public final class TabNabbingProblem {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(getProblem(), type);
     }
 }

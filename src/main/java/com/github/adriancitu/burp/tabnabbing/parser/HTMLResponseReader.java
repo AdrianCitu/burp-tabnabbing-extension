@@ -72,9 +72,7 @@ public class HTMLResponseReader implements IByteReader {
                                 iterator.remove();
                                 break;
                             case SCAN_ENTIRE_PAGE:
-                                for (final IByteReaderObserver listener : this.observers) {
-                                    listener.close();
-                                }
+                                closeAllObservers();
                                 break;
 
                             default:
@@ -88,6 +86,12 @@ public class HTMLResponseReader implements IByteReader {
         }
 
         return new ArrayList<>(setOfProblems);
+    }
+
+    private void closeAllObservers() throws IOException {
+        for (final IByteReaderObserver listener : this.observers) {
+            listener.close();
+        }
     }
 
     private int computeTheSizeOfTheResponse(final int initialNumberOgAskedBytes) {
@@ -125,9 +129,7 @@ public class HTMLResponseReader implements IByteReader {
 
     @Override
     public void close() throws IOException {
-        for (final IByteReaderObserver listener : this.observers) {
-            listener.close();
-        }
+        closeAllObservers();
         observers.clear();
         index = 0;
     }
