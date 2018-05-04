@@ -1,15 +1,18 @@
 package com.github.adriancitu.burp.tabnabbing.parser;
 
 import com.github.adriancitu.burp.tabnabbing.scanner.IssueType;
+import com.github.adriancitu.burp.tabnabbing.scanner.ScanStrategy;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -61,7 +64,7 @@ public class HTMLAnchorReaderListenerTest {
         final List<TabNabbingProblem> response =
                 ((HTMLResponseReader) reader).getProblems();
 
-        assertTrue(response.size() == 1);
+        assertEquals(1, response.size());
         assertEquals("<a href=\"#mw-head\">", response.get(0).getProblem());
         assertEquals(IssueType.HTML_LINK_NO_REFERRER_POLICY_HEADER, response.get(0).getIssueType());
 
@@ -101,6 +104,28 @@ public class HTMLAnchorReaderListenerTest {
 
     }
 
+
+    @Test
+    public void testMultipleFindings() throws IOException {
+
+        final Path path = Paths.get("src/test/resources/multipleBadHREFResponse.html");
+        final byte[] data = Files.readAllBytes(path);
+
+        System.setProperty(
+                HTMLResponseReader.SCAN_STRATEGY_SYSTEM_PROPERTY,
+                ScanStrategy.SCAN_ENTIRE_PAGE.toString());
+        reader = new HTMLResponseReader(data);
+        reader.attachObservers(Arrays.asList(hrefListener));
+
+
+        final List<TabNabbingProblem> response =
+                ((HTMLResponseReader) reader).getProblems();
+
+        assertEquals(3, response.size());
+        System.setProperty(
+                HTMLResponseReader.SCAN_STRATEGY_SYSTEM_PROPERTY,
+                ScanStrategy.STOP_AFTER_FIRST_FINDING.toString());
+    }
 
     @Test
     public void testNotValidHref() {

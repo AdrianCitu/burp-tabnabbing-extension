@@ -5,6 +5,8 @@ import burp.IHttpService;
 import burp.IScanIssue;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Objects;
 
 class CustomScanIssue implements IScanIssue {
 
@@ -24,7 +26,7 @@ class CustomScanIssue implements IScanIssue {
         this.url = url;
         this.httpMessages = new IHttpRequestResponse[]{iHttpRequestResponse};
         this.issueType = issueType;
-        this.issueDetail = issueDetail;
+        this.issueDetail = issueDetail.replaceAll("<", "&lt;").trim();
     }
 
     @Override
@@ -83,4 +85,34 @@ class CustomScanIssue implements IScanIssue {
         return httpService;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CustomScanIssue)) return false;
+        CustomScanIssue that = (CustomScanIssue) o;
+        return getIssueType() == that.getIssueType() &&
+                Objects.equals(getIssueDetail(), that.getIssueDetail()) &&
+                Objects.equals(getHttpService(), that.getHttpService()) &&
+                Objects.equals(getUrl(), that.getUrl()) &&
+                Arrays.equals(getHttpMessages(), that.getHttpMessages());
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = Objects.hash(getIssueType(), getIssueDetail(), getHttpService(), getUrl());
+        result = 31 * result + Arrays.hashCode(getHttpMessages());
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomScanIssue{" +
+                "issueType=" + issueType +
+                ", issueDetail='" + issueDetail + '\'' +
+                ", httpService=" + httpService +
+                ", url=" + url +
+                ", httpMessages=" + Arrays.toString(httpMessages) +
+                '}';
+    }
 }

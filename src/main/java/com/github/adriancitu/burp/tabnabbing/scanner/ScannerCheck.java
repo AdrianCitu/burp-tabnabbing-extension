@@ -65,13 +65,13 @@ public class ScannerCheck implements IScannerCheck {
                             .map(
                                     problem ->
                                             new CustomScanIssue(
-                                                iHttpRequestResponse,
-                                                helpers.analyzeRequest(
-                                                        iHttpRequestResponse).getUrl(),
-                                                problem.getIssueType(),
-                                                problem.getProblem()
+                                                    iHttpRequestResponse,
+                                                    helpers.analyzeRequest(
+                                                            iHttpRequestResponse).getUrl(),
+                                                    problem.getIssueType(),
+                                                    problem.getProblem()
 
-                    )).collect(Collectors.toList());
+                                            )).collect(Collectors.toList());
 
             return returnValue;
 
@@ -106,7 +106,8 @@ public class ScannerCheck implements IScannerCheck {
     public int consolidateDuplicateIssues(
             final IScanIssue existingIssue,
             final IScanIssue newIssue) {
-        if (existingIssue.getIssueName().equals(newIssue.getIssueName())) {
+        if (existingIssue.getIssueDetail().equalsIgnoreCase(
+                newIssue.getIssueDetail())) {
             return -1;
         } else {
             return 0;

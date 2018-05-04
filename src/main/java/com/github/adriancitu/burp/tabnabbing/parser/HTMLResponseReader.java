@@ -1,21 +1,40 @@
 package com.github.adriancitu.burp.tabnabbing.parser;
 
+import com.github.adriancitu.burp.tabnabbing.scanner.ScanStrategy;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class HTMLResponseReader implements IByteReader {
 
+    /**
+     * System property to drive the scanning strategy.
+     */
+    public static final String SCAN_STRATEGY_SYSTEM_PROPERTY
+            = "tabnabbing.pagescan.strategy";
+    private static final Logger LOGGER =
+            Logger.getLogger(HTMLResponseReader.class.getName());
     private final byte[] bytes;
     private final int bytesLength;
     private List<IByteReaderObserver> observers;
     private int index = 0;
+    private ScanStrategy scanStrategy = ScanStrategy.STOP_AFTER_FIRST_FINDING;
+
 
     public HTMLResponseReader(final byte[] bytes) {
         this.bytes = bytes;
         this.bytesLength = this.bytes.length;
+
+        try {
+            scanStrategy = ScanStrategy.valueOf(System.getProperty(
+                    SCAN_STRATEGY_SYSTEM_PROPERTY,
+                    ScanStrategy.SCAN_ENTIRE_PAGE.toString()));
+        } catch (IllegalArgumentException e) {
+            LOGGER.log(Level.WARNING, "Cannot compute scan strategy", e);
+        }
+
     }
 
     /**
@@ -30,8 +49,8 @@ public class HTMLResponseReader implements IByteReader {
      * by listener.
      */
     public List<TabNabbingProblem> getProblems() {
-        List<TabNabbingProblem> returnValue =
-                new ArrayList<>(observers.size());
+        Set<TabNabbingProblem> setOfProblems =
+                new HashSet<>(observers.size());
 
 
         for (index = 0; index < bytes.length; index++) {
@@ -42,20 +61,40 @@ public class HTMLResponseReader implements IByteReader {
 
                 if (observer.problemFound()
                         && observer.getProblem().isPresent()) {
-                    returnValue.add(observer.getProblem().get());
-                    iterator.remove();
+                    setOfProblems.add(observer.getProblem().get());
+                    try {
+                        switch (scanStrategy) {
+                            case STOP_AFTER_FIRST_FINDING:
+                                this.close();
+                                return new ArrayList<>(setOfProblems);
+                            case STOP_AFTER_FIRST_HTML_AND_JS_FINDING:
+                                observer.close();
+                                iterator.remove();
+                                break;
+                            case SCAN_ENTIRE_PAGE:
+                                for (final IByteReaderObserver listener : this.observers) {
+                                    listener.close();
+                                }
+                                break;
+
+                            default:
+                                break;
+                        }
+                    } catch (IOException e) {
+                        LOGGER.log(Level.INFO, e.getMessage(), e);
+                    }
                 }
             }
         }
 
-        return returnValue;
+        return new ArrayList<>(setOfProblems);
     }
 
     private int computeTheSizeOfTheResponse(final int initialNumberOgAskedBytes) {
 
         final int askedOffset = index + initialNumberOgAskedBytes;
 
-        if (askedOffset > bytesLength) {
+        if (askedOffset >= bytesLength) {
             return bytesLength - index - 1;
         }
 

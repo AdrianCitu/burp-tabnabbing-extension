@@ -88,7 +88,7 @@ public enum IssueType {
         public static final String JS_REMEDIATION = "Open the popup and set the opener and referrer policy instruction " +
                 "(ex: var newWindow = window.open(url, name, 'noopener,noreferrer');) " +
                 "and reset the opener link (ex:newWindow.opener = null;)";
-        public static final String HTML_REMEDIATION = "For html link, add the attribute rel=\"noopener noreferrer\" for every links.";
+        public static final String HTML_REMEDIATION = "Add the attribute rel=\"noopener noreferrer\" for every link.";
         public static final String HEADER_REMEDIATION = "add the HTTP response header Referrer-Policy: no-referrer the every HTTP " +
                 "responses send by the application";
         public static final String SEVERITY_INFO = "Information";

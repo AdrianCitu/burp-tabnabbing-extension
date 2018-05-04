@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="client-nojs">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="alternate" type="application/atom+xml" title="OWASP Atom feed"
+          href="/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+</head>
+
+<body>
+<li><a href="bad1.example.com" target="_blank">Vulnerable target using html link to open the new page</a></li>
+<button onclick="window.open('https://bad.example.com')">Vulnerable target using javascript to open the new page
+</button>
+
+<li><a href="bad2.example.com" target="_blank">Vulnerable target using html link to open the new page</a></li>
+
+<li><a href="good.example.com" rel="noopener noreferrer" target="_blank">Vulnerable target using html link to open the
+    new page</a></li>
+
+
+<li><a href="bad3.example.com" target="_blank">Vulnerable target using html link to open the new page</a></li>
+
+</body>
+
+</html>
