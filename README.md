@@ -10,6 +10,7 @@ The possible options of "tabnabbing.pagescan.strategy" are:
  * SCAN_ENTIRE_PAGE (default value).
      
 The "tabnabbing.pagescan.strategy" system variable can be set-up at start time like this:
+
 java -Dtabnabbing.pagescan.strategy=SCAN_ENTIRE_PAGE -jar burpsuite-pro-x.x.xx.jar
  
  
@@ -18,3 +19,5 @@ java -Dtabnabbing.pagescan.strategy=SCAN_ENTIRE_PAGE -jar burpsuite-pro-x.x.xx.j
   * Burp Suite Professional version 1.7.33 (or later ?) - not sure that the next API
     versions will be backward compatible.
  
+Some code metrics (from sonarcloud): https://sonarcloud.io/dashboard?id=com.github.adriancitu.burp%3Atabnabbing
+If you want to know more technical details about how the plug-in was done: http://adriancitu.com/2018/05/08/tabnabbing-burp-extension/ 
