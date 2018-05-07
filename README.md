@@ -22,5 +22,3 @@ java -Dtabnabbing.pagescan.strategy=SCAN_ENTIRE_PAGE -jar burpsuite-pro-x.x.xx.j
 Some code metrics (from sonarcloud): https://sonarcloud.io/dashboard?id=com.github.adriancitu.burp%3Atabnabbing
 
 If you want to know more technical details about how the plug-in was done: https://adriancitu.com/2018/05/07/tabnabbing-burp-extension/ 
-
-https://sonarcloud.io/api/project_badges/measure?project=com.github.adriancitu.burp%3Atabnabbing&metric=coverage
