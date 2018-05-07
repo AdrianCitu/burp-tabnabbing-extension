@@ -20,4 +20,4 @@ java -Dtabnabbing.pagescan.strategy=SCAN_ENTIRE_PAGE -jar burpsuite-pro-x.x.xx.j
     versions will be backward compatible.
  
 Some code metrics (from sonarcloud): https://sonarcloud.io/dashboard?id=com.github.adriancitu.burp%3Atabnabbing
-If you want to know more technical details about how the plug-in was done: http://adriancitu.com/2018/05/08/tabnabbing-burp-extension/ 
+If you want to know more technical details about how the plug-in was done: https://adriancitu.com/2018/05/07/tabnabbing-burp-extension/ 
